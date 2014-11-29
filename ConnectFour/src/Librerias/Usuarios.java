@@ -5,17 +5,29 @@
  */
 package Librerias;
 
+import java.util.Calendar;
+
 /**
  *
  * @author ADMIN
  */
 public class Usuarios {
     private String nombre, username, password;
+    Calendar fechaNac;
 
-    public Usuarios(String n, String user, String pass){
+    public Usuarios(String n, String user, String pass, Calendar nac){
     	nombre = n;
     	username = user;
     	password = pass;
+        fechaNac = nac;
+    }
+
+    public Calendar getFechaNac() {
+        return fechaNac;
+    }
+
+    public void setFechaNac(Calendar fechaNac) {
+        this.fechaNac = fechaNac;
     }
 
     public String getNombre(){
@@ -42,6 +54,11 @@ public class Usuarios {
     	password = p;
     }
 
+    public boolean login(String user, String pass){
+        if (user == username && pass == password)
+            return true;
+        return false;
+    }
     /**
      * Imprime los datos del usuario, exceptuando password.
      */
