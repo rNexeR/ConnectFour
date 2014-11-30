@@ -29,7 +29,7 @@ public class Main {
         
         do{
             try{
-                System.out.println("1- Login \n"
+                Prints.printlnWithColor("CYAN","1- Login \n"
                         + "2- Crear Usuario \n"
                         + "3- Salir \n");
                 System.out.print("Seleccione: ");
