@@ -27,7 +27,7 @@ public class Prints {
     public static void printWithColor(String color, String message){
         try{
             Colores este = Colores.valueOf(color.toUpperCase());
-            System.out.print("\033[" + este.cod + "m" + message);
+            System.out.print("\033[" + este.cod + "m" + message + "\033[30m");
         }catch (IllegalArgumentException e){
             System.out.println("\033[31m\tError: " + e.getMessage() + "\n" +
                     "\tDescripcion: Color no Soportado");
@@ -50,7 +50,7 @@ public class Prints {
     public static void printlnWithColor(String color, String message){
         try{
             Colores este = Colores.valueOf(color.toUpperCase());
-            System.out.println("\033[" + este.cod + "m" + message);
+            System.out.println("\033[" + este.cod + "m" + message + "\033[30m");
         }catch (IllegalArgumentException e){
             System.out.println("\033[31m\tError: " + e.getMessage() + "\n" +
                     "\tDescripcion: Color no Soportado");
