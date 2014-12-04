@@ -68,7 +68,7 @@ public class Usuarios {
     }
 
     public boolean login(String user, String pass){
-        if (user == username && pass == password)
+        if (user.equals(username) && pass.equals(password))
             return true;
         return false;
     }
