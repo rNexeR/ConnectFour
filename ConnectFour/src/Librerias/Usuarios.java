@@ -16,9 +16,6 @@ import java.util.Calendar;
  * @author ADMIN
  */
 public class Usuarios {
-    private static RandomAccessFile usuarios;
-    private static ArrayList<Usuarios> users = new ArrayList<>();
-    
     private String nombre, username, password;
     Calendar fechaNac;
 
@@ -28,11 +25,6 @@ public class Usuarios {
     	username = user;
     	password = pass;
         fechaNac = nac;
-        try{
-            addUser();
-        }catch (IOException e){
-            Prints.printlnWithColor("RED", "Error al crear Usuario");
-        }
     }
 
     public Calendar getFechaNac() {
@@ -78,14 +70,5 @@ public class Usuarios {
     public void print(){
         System.out.printf("Nombre: %s - Username: %s \n", 
                 getNombre(), getUsername());
-    }
-
-    private void addUser() throws IOException{
-        File existe = new File("ConnectFour" + File.separator + "usuarios.cfo");
-        if (existe.exists()){
-            
-        }else
-            usuarios = new RandomAccessFile(existe, "rw");
-        users.add(new Usuarios(nombre, username, password, fechaNac));
     }
 }
