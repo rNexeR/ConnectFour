@@ -7,6 +7,8 @@ package Game;
 
 import Librerias.Prints;
 import Librerias.Usuarios;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -15,7 +17,16 @@ import java.util.Scanner;
  * @author rnexer
  */
 public class MenuPrincipal {
+    //Variables para el Funcionamiento del Programa
     Scanner rd = new Scanner(System.in);
+    
+    //ArrayLists
+    ArrayList<Usuarios> users = new ArrayList<>();
+    
+    //Variables para RandomAccessFile
+    RandomAccessFile usuarios;
+    
+    //Variables para el Control de Turnos
     String currentUser;
     
     void login(){
