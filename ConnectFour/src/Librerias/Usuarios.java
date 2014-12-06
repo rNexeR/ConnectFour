@@ -5,6 +5,10 @@
  */
 package Librerias;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -16,6 +20,7 @@ public class Usuarios {
     Calendar fechaNac;
 
     public Usuarios(String n, String user, String pass, Calendar nac){
+        //validar Existe
     	nombre = n;
     	username = user;
     	password = pass;
@@ -55,7 +60,7 @@ public class Usuarios {
     }
 
     public boolean login(String user, String pass){
-        if (user == username && pass == password)
+        if (user.equals(username) && pass.equals(password))
             return true;
         return false;
     }

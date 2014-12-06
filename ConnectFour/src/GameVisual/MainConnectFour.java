@@ -9,6 +9,8 @@ import java.awt.Label;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import java.awt.event.ActionEvent;
+import javax.swing.JButton;
 
 /**
  *
@@ -19,7 +21,6 @@ public class MainConnectFour extends javax.swing.JFrame {
    private Label user, pass;
    private JTextField txtuser, txtpass;
    private char op;
-   
    private int x = 125, y = 0;
     
     /**
