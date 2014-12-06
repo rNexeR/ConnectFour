@@ -88,8 +88,7 @@ public class Main {
                 Prints.printWithColor("YELLOW","Fecha Nacimiento (dd/mm/yy/): ");
                 String fecha = rd.next();
                 
-                int dia = Integer.parseInt(fecha.split("/"));
-                
+                String [] dia = (fecha.split("/"));                
                 //users.add(new Usuarios());
             }else
                 Prints.printlnWithColor("RED","Usuario ya Existe\n");
