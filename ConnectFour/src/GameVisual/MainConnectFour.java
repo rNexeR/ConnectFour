@@ -5,12 +5,22 @@
  */
 package GameVisual;
 
+import Librerias.Usuarios;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import java.awt.event.ActionEvent;
-import javax.swing.JButton;
 
 /**
  *
@@ -18,17 +28,69 @@ import javax.swing.JButton;
  */
 public class MainConnectFour extends javax.swing.JFrame {
    private JButton login, addUser, salir, btnaceptar = null, btncancelar = null;
-   private Label user, pass;
-   private JTextField txtuser, txtpass;
+   private Label user, pass, nombre, fecha;
+   private JFormattedTextField txtfecha;
+   private JTextField txtuser, txtnombre;
+   private JPasswordField txtpass;
    private char op;
    private int x = 125, y = 0;
+   
+   private ArrayList<Usuarios> users;
+   private RandomAccessFile rUsers;
     
     /**
      * Creates new form MainConnectFour
      */
     public MainConnectFour() {
         initComponents();
+        users = new ArrayList<>();
+        loadUsers();
         createOptions();
+    }
+    
+    private void loadUsers(){
+        //Verificar que la carpeta exista
+        File user = new File("GameFiles");
+        if (!user.exists())
+            user.mkdir();
+            
+        
+        user = new File("GameFiles" + File.separator + "Usuarios.cfo");
+       
+        int cod, ppendientes, pterminadas, puntos;
+        String nombre, username, password;
+        long fecha;
+        
+        if (user.exists()){
+            try {
+                //Cargar Usuarios
+                 try {
+                     rUsers = new RandomAccessFile(user, "rw");
+                 } catch (FileNotFoundException ex) {
+                     System.out.println("Archivo no encontrado");
+                 }
+                while(rUsers.getFilePointer() < rUsers.length()){
+                    cod = rUsers.readInt();
+                    username = rUsers.readUTF();
+                    password = rUsers.readUTF();
+                    nombre = rUsers.readUTF();
+                    fecha = rUsers.readLong();
+                    pterminadas = rUsers.readInt();
+                    ppendientes = rUsers.readInt();
+                    puntos = rUsers.readInt();
+                    users.add(new Usuarios(pterminadas, ppendientes, puntos, nombre, username, password, fecha));
+                }
+            } catch (IOException ex) {
+                System.out.println("Usuarios.cfo: Error al cargar");
+            }
+        }else{
+             try {
+                 user.createNewFile();
+             } catch (IOException ex) {
+                 System.out.println("Usuarios.cfo: Error al crear");
+             }
+        }
+       
     }
     
     private void createOptions(){
@@ -83,26 +145,101 @@ public class MainConnectFour extends javax.swing.JFrame {
         btncancelar.setSize(100, 30);
     }
     
+    private Usuarios searchUser(String user){
+        for (Usuarios x : users){
+            if (x.getUsername().equalsIgnoreCase(user))
+                return x;
+        }
+        return null;
+    }
+    
     private void btnaceptarActionPerformed(ActionEvent evt) {
         //Aqui el Codigo
+        if (op == 'L'){
+            if (users.size() > 0){
+                String user1 = txtuser.getText();
+                Usuarios buscar = searchUser(user1);
+                if (buscar != null){
+                    String passwd = new String(txtpass.getPassword());
+                    if (buscar.getPassword().equals(passwd)){
+                        System.out.println("Sesion Iniciada");
+                        //Llamar Formulario de ConnectFour
+                        exitLogin();
+                    }
+                }
+            }else{
+                JOptionPane.showMessageDialog(this, "No hay registros de Usuarios creados", "Error al Inicar Sesion", JOptionPane.INFORMATION_MESSAGE);
+                exitLogin();
+            }
+        }else{
+            //addUser
+            String usern = txtuser.getText();
+            Usuarios buscar = searchUser(usern);
+            if (buscar != null)
+                return;
+            else{
+                String pass = new String(txtpass.getPassword());
+                String name = txtnombre.getText();
+                long fec = getTime(txtfecha.getText());
+                users.add(new Usuarios(name, usern, pass, fec));
+                System.out.println("Usuario Creado");
+                JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                exitAddUser();
+            }
+        }
+    }
+    
+    private long getTime(String fecha){
+        String fech[] = fecha.split("-");
+        int d = Integer.parseInt(fech[0]);
+        int m = Integer.parseInt(fech[1]);
+        int a = Integer.parseInt(fech[2]);
+        Calendar tmp = Calendar.getInstance();
+        tmp.set(a, m, d);
+        return tmp.getTimeInMillis();
+    }
+    
+    private void exitLogin(){
+        getContentPane().remove(txtuser);
+        getContentPane().remove(txtpass);
+        getContentPane().remove(user);
+        getContentPane().remove(pass);
+        login.setBounds(x, 133 -35 -5, 150, 35);
+        addUser.setBounds(x, 133, 150, 35);
+        salir.setBounds(x, 133 +35 +5, 150, 35);
+        exit();
+    }
+    
+    private void exitAddUser(){
+        getContentPane().remove(txtuser);
+        getContentPane().remove(txtpass);
+        getContentPane().remove(user);
+        getContentPane().remove(pass);
+        getContentPane().remove(nombre);
+        getContentPane().remove(fecha);
+        getContentPane().remove(txtnombre);
+        getContentPane().remove(txtfecha);
+        login.setBounds(x, 133 -35 -5, 150, 35);
+        addUser.setBounds(x, 133, 150, 35);
+        salir.setBounds(x, 133 +35 +5, 150, 35);
+        exit();
+    }
+    
+    private void exit(){
+        getContentPane().remove(btnaceptar);
+        getContentPane().remove(btncancelar);
+        changeOptionEnabled(true);
+        getContentPane().repaint();
     }
     
     private void btncancelarActionPerformed(ActionEvent evt) {
         //Aqui el Codigo
         if (op == 'L'){
-            getContentPane().remove(txtuser);
-            getContentPane().remove(txtpass);
-            getContentPane().remove(user);
-            getContentPane().remove(pass);
-            moveOption(addUser, -90);
-            moveOption(salir, -90);
+            exitLogin();
         }else{
-            
+            exitAddUser();
         }
-            getContentPane().remove(btnaceptar);
-            getContentPane().remove(btncancelar);
-            changeOptionEnabled(true);
-            getContentPane().repaint();
+            
     }
     
     private void loginActionPerformed(ActionEvent evt) {
@@ -116,11 +253,78 @@ public class MainConnectFour extends javax.swing.JFrame {
         //Aqui el Codigo
         System.out.println("AddUser");
         op = 'C';
+        clicAddUser();
+    }
+    
+    private void clicAddUser(){
+        changeOptionEnabled(false);
+        moveOption(login, -login.getY()+1);
+        moveOption(addUser, 90);
+        moveOption(salir, 90);
+        
+        user = new Label();
+        user.setText("Usuario: ");
+        getContentPane().add(user);
+        user.setLocation(login.getX()-80, login.getY()+45);
+        user.setSize(70, 35);
+        
+        
+        pass = new Label();
+        pass.setText("Password: ");
+        getContentPane().add(pass);
+        pass.setLocation(login.getX()-80, user.getY()+35);
+        pass.setSize(70, 35);
+        
+        txtuser = new JTextField();
+        getContentPane().add(txtuser);
+        txtuser.setLocation(user.getX()+user.getWidth(), user.getY());
+        txtuser.setSize(150, 30);
+        
+        txtpass = new JPasswordField();
+        getContentPane().add(txtpass);
+        txtpass.setLocation(pass.getX()+pass.getWidth(), pass.getY());
+        txtpass.setSize(150, 30);
+        
+        nombre = new Label();
+        nombre.setText("Nombre: ");
+        getContentPane().add(nombre);
+        nombre.setLocation(pass.getX(), pass.getY()+35);
+        nombre.setSize(70, 35);
+        
+        txtnombre = new JTextField();
+        getContentPane().add(txtnombre);
+        txtnombre.setLocation(nombre.getX()+nombre.getWidth(), nombre.getY());
+        txtnombre.setSize(150, 30);
+        
+        fecha = new Label();
+        fecha.setText("Fecha Nac.: ");
+        getContentPane().add(fecha);
+        fecha.setLocation(pass.getX(), nombre.getY()+35);
+        fecha.setSize(70, 35);
+        
+        txtfecha = new JFormattedTextField();
+        txtfecha.setToolTipText("dia-mes-year");
+        txtfecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd-MM-yyyy"))));
+        getContentPane().add(txtfecha);
+        txtfecha.setLocation(fecha.getX()+fecha.getWidth(), fecha.getY());
+        txtfecha.setSize(150, 30);
+        
+        getContentPane().add(btnaceptar);
+        getContentPane().add(btncancelar);
+        
+        btnaceptar.setLocation(txtuser.getX()+txtuser.getWidth(), txtuser.getY());
+        btnaceptar.setText("Agregar");
+        btncancelar.setLocation(txtpass.getX()+txtpass.getWidth(), txtpass.getY());
     }
     
     private void salirActionPerformed(ActionEvent evt) {
         //Aqui el Codigo
         System.out.println("Salir");
+        int op = JOptionPane.showConfirmDialog(this, "Desea Salir", "Confirmacion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (op == JOptionPane.YES_OPTION){
+            //Serializacion y Archivos Binarios
+            dispose();
+        }
     }
     
     private void changeOptionEnabled(boolean state){
@@ -152,7 +356,7 @@ public class MainConnectFour extends javax.swing.JFrame {
         txtuser.setLocation(user.getX()+user.getWidth(), user.getY());
         txtuser.setSize(150, 30);
         
-        txtpass = new JTextField();
+        txtpass = new JPasswordField();
         getContentPane().add(txtpass);
         txtpass.setLocation(pass.getX()+pass.getWidth(), pass.getY());
         txtpass.setSize(150, 30);

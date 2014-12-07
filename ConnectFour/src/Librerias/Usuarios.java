@@ -5,21 +5,17 @@
  */
 package Librerias;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  *
  * @author ADMIN
  */
 public class Usuarios {
+    private int pterminadas, ppendientes, puntos;
     private String nombre, username, password;
-    Calendar fechaNac;
+    private long fechaNac;
 
-    public Usuarios(String n, String user, String pass, Calendar nac){
+    public Usuarios(String n, String user, String pass, long nac){
         //validar Existe
     	nombre = n;
     	username = user;
@@ -27,11 +23,21 @@ public class Usuarios {
         fechaNac = nac;
     }
 
-    public Calendar getFechaNac() {
+    public Usuarios(int pterminadas, int ppendientes, int puntos, String nombre, String username, String password, long fechaNac) {
+        this.pterminadas = pterminadas;
+        this.ppendientes = ppendientes;
+        this.puntos = puntos;
+        this.nombre = nombre;
+        this.username = username;
+        this.password = password;
+        this.fechaNac = fechaNac;
+    }
+    
+    public long getFechaNac() {
         return fechaNac;
     }
 
-    public void setFechaNac(Calendar fechaNac) {
+    public void setFechaNac(long fechaNac) {
         this.fechaNac = fechaNac;
     }
 
