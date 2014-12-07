@@ -96,6 +96,7 @@ public class MainConnectFour extends javax.swing.JFrame {
     }
     
     public void saveUsers(){
+        System.out.println("Guardando Usuarios");
        try {
             rUsers.seek(0);
             for (Usuarios x : users){
@@ -107,6 +108,7 @@ public class MainConnectFour extends javax.swing.JFrame {
                 rUsers.writeInt(x.getPpendientes());
                 rUsers.writeInt(x.getPuntos());
             }
+            System.out.println("Usuarios guardados");
        } catch (IOException ex) {
            System.out.println("Error al guardar Usuarios");
        }
@@ -184,9 +186,10 @@ public class MainConnectFour extends javax.swing.JFrame {
     private void close(){
         if (JOptionPane .showConfirmDialog(rootPane, "¿Desea realmente salir del sistema?",
                 "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+            saveUsers();
             System .exit(0);
             //Escribir en el archivo de texto
-            saveUsers();
+            
         }
     }   
     
@@ -202,8 +205,10 @@ public class MainConnectFour extends javax.swing.JFrame {
                         System.out.println("Sesion Iniciada");
                         //Llamar Formulario de ConnectFour
                         exitLogin();
-                    }
-                }
+                    }else
+                        JOptionPane.showMessageDialog(this, "Usuario y Contraseña no coinciden", "Error al Inicar Sesion", JOptionPane.INFORMATION_MESSAGE);
+                }else
+                    JOptionPane.showMessageDialog(this, "Usuario no Encontrado", "Error al Inicar Sesion", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 JOptionPane.showMessageDialog(this, "No hay registros de Usuarios creados", "Error al Inicar Sesion", JOptionPane.INFORMATION_MESSAGE);
                 exitLogin();
@@ -220,6 +225,7 @@ public class MainConnectFour extends javax.swing.JFrame {
                 long fec = getTime(txtfecha.getText());
                 users.add(new Usuarios(name, usern, pass, fec));
                 System.out.println("Usuario Creado");
+                saveUsers();
                 JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
                 exitAddUser();
             }
