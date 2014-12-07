@@ -13,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import javafx.scene.layout.Border;
 import javax.swing.*;
 
 /**
@@ -58,15 +59,19 @@ public class GameCFour extends JFrame {
         for (int i = 0; i < CANT_ROW; i++) {
             for(int j = 0; j < CANT_COL; j++){
                 square [i][j] = new JPanel( new BorderLayout() );
-                CircleButtons cl = new CircleButtons();
+                CircleLabels cl = new CircleLabels();
+                //CircleButtons cl = new CircleButtons();
                 square[i][j].add(cl);
+                cl.setColorIcon();
                 //cl.setColor('D');
                 tablero.add(square [i][j]);
                 int row = (i / CANT_ROW) % 2;
-                if (row == 0)//0, 2, 4
-                    square[i][j].setBackground((i + j) % 2 == 0 ? Color.black : Color.white );
-                else
+                if (row == 0){//0, 2, 4
+                    square[i][j].setBackground((i + j) % 2 == 0 ? Color.black : Color.white );    
+                    //square[i][j].setBorder(new Border());
+                }else{
                     square[i][j].setBackground((i + j) % 2 == 0 ? Color.white : Color.black ); 
+                }
             }           
         }      
         

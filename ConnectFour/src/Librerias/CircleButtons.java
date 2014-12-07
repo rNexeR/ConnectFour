@@ -14,13 +14,18 @@ import javax.swing.JButton;
  * @author Raim
  */
 public class CircleButtons extends JButton{
-    ImageIcon icon  = new ImageIcon("/assets/BlankCircle.png", "My Icon Image");
+    ImageIcon icon  = new ImageIcon("src/assets/BlankCircle.png", "My Icon Image");
     
     public CircleButtons(){
         super();
         super.setIcon(icon);
         setSelectedIcon(icon);
         setPressedIcon(icon);
-        setBackground(Color.red);
+        //setBackground(Color.red);
+        //setEnabled(false);
+    }
+    
+    public void setColorIcon(){
+        setIcon(icon);
     }
 }
