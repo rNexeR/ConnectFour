@@ -79,6 +79,7 @@ public class MainConnectFour extends javax.swing.JFrame {
                     ppendientes = rUsers.readInt();
                     puntos = rUsers.readInt();
                     users.add(new Usuarios(pterminadas, ppendientes, puntos, nombre, username, password, fecha));
+                    rUsers.close();
                 }
             } catch (IOException ex) {
                 System.out.println("Usuarios.cfo: Error al cargar");
@@ -95,6 +96,13 @@ public class MainConnectFour extends javax.swing.JFrame {
     
     public void saveUsers(){
         System.out.println("Guardando Usuarios");
+        File user = new File("GameFiles"+File.separator+"usuarios.cfo");
+        try {
+            rUsers = new RandomAccessFile(user, "rw");
+        } catch (FileNotFoundException ex) {
+            System.out.println("Archivo no encontrado");
+        }
+        
        try {
             rUsers.seek(0);
             for (Usuarios x : users){
@@ -107,6 +115,7 @@ public class MainConnectFour extends javax.swing.JFrame {
                 rUsers.writeInt(x.getPuntos());
             }
             System.out.println("Usuarios guardados");
+            rUsers.close();
        } catch (IOException ex) {
            System.out.println("Error al guardar Usuarios");
        }
