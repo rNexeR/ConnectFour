@@ -13,28 +13,20 @@ import javax.swing.ImageIcon;
  *
  * @author Raim
  */
-public class CircleLabels extends JLabel{    
-    ImageIcon icon  = new ImageIcon("src/assets/BlankCircle.png", "My Icon Image");
-    
+public class CircleLabels extends JLabel{   
     public CircleLabels(){
-        super();        
-        //buttonPic1 = new JButton( new ImageIcon( getCodeBase().getPath() + "Block.jpg" ) );
-        setText("HOLA");
-        setBackground(Color.red);
-        this.setBackground(Color.red);
-        //setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/assets/BlankCircle.png")));        
-    }
+        super();               
+    }    
     
-    public void setColor(char color){
+    public void setColorIcon(char color){
+        ImageIcon icon;
         if (color == 'A')
-            setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/YellowCircle.png")));
+            icon  = new ImageIcon("src/assets/YellowCircle.png", "Ficha Amarilla");
         else if (color == 'R')
-            setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/RedCircle.png")));
-        else
-            setIcon(new javax.swing.ImageIcon("/assets/BlankCircle.png"));
-    }
-    
-    public void setColorIcon(){
+            icon = new ImageIcon("src/assets/RedCircle.png", "Ficha Roja");
+        else             
+            icon  = new ImageIcon("src/assets/BlankCircle.png", "Ficha Amarilla");
+
         setIcon(icon);
     }
 }

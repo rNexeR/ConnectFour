@@ -5,15 +5,11 @@
  */
 package GameVisual;
 
-import Librerias.CircleButtons;
 import Librerias.CircleLabels;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import javafx.scene.layout.Border;
 import javax.swing.*;
 
 /**
@@ -60,18 +56,16 @@ public class GameCFour extends JFrame {
             for(int j = 0; j < CANT_COL; j++){
                 square [i][j] = new JPanel( new BorderLayout() );
                 CircleLabels cl = new CircleLabels();
-                //CircleButtons cl = new CircleButtons();
                 square[i][j].add(cl);
-                cl.setColorIcon();
-                //cl.setColor('D');
+                cl.setColorIcon('D');
                 tablero.add(square [i][j]);
-                int row = (i / CANT_ROW) % 2;
-                if (row == 0){//0, 2, 4
-                    square[i][j].setBackground((i + j) % 2 == 0 ? Color.black : Color.white );    
+                //int row = (i / CANT_ROW) % 2;
+                //if (row == 0){//0, 2, 4                  
+                square[i][j].setBackground(Color.white );    
                     //square[i][j].setBorder(new Border());
-                }else{
-                    square[i][j].setBackground((i + j) % 2 == 0 ? Color.white : Color.black ); 
-                }
+                //}else{                 
+                //square[i][j].setBackground((i + j) % 2 == 0 ? Color.white : Color.black ); 
+                //}
             }           
         }      
         
