@@ -3,85 +3,44 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package GameVisual;
+package Librerias;
 
-import Librerias.CircleButtons;
-import Librerias.CircleLabels;
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 
 /**
  *
  * @author Raim
  */
-public class GameCFour extends JFrame {    
-    private final static byte CANT_ROW = 6;
-    private final static byte CANT_COL = 7;
-    private final static byte CONNECTED_WIN = 4;//VALOR PARA GANAR
-    private JPanel tablero;
-    private JLayeredPane jlp;    
-    private final Color background = new Color(200, 200, 200);//por si quiero probar algun color
-    private JLabel[][] circulos; //potencial a usar
-    private final static int SIZE_PIEZA = 70;
+public class Test extends javax.swing.JFrame {
     private CircleLabels cl;
-    //private Color c = new Color
+    private CircleButtons cb;
+    private JPanel tablero;
+    private JLayeredPane jlp;  
     /**
-     * Creates new form GameCFour
+     * Creates new form Test
      */
-    public GameCFour() {
+    public Test() {
         initComponents();
-        createBoard();
-    }    
-    
-    public void createBoard(){
+        
         Dimension boardSize = new Dimension(600, 600);
         jlp = new JLayeredPane();
         getContentPane().add(jlp);
         jlp.setPreferredSize(boardSize);
         
         tablero = new JPanel();
-                
         jlp.add(tablero, JLayeredPane.DEFAULT_LAYER);
         tablero.setLayout( new GridLayout(6, 7));
         tablero.setPreferredSize(boardSize);
         tablero.setBounds(0, 0, boardSize.width, boardSize.height);
         
         getContentPane().add(tablero);
-        JPanel [][] square = new JPanel[CANT_ROW][CANT_COL];
-        //MOMENTO DE PRUEBA DE AGREGAR UN CIRCULO
-                
-        for (int i = 0; i < CANT_ROW; i++) {
-            for(int j = 0; j < CANT_COL; j++){
-                square [i][j] = new JPanel( new BorderLayout() );
-                CircleButtons cl = new CircleButtons();
-                square[i][j].add(cl);
-                //cl.setColor('D');
-                tablero.add(square [i][j]);
-                int row = (i / CANT_ROW) % 2;
-                if (row == 0)//0, 2, 4
-                    square[i][j].setBackground((i + j) % 2 == 0 ? Color.black : Color.white );
-                else
-                    square[i][j].setBackground((i + j) % 2 == 0 ? Color.white : Color.black ); 
-            }           
-        }      
-        
-        
-//        
-//        try{            
-//            CircleLabels cl = new CircleLabels();
-//            tablero.add(cl);
-//            cl.setColor('D');
-//        }catch (Exception ex){
-//            System.out.println(ex.getMessage());
-//            ex.printStackTrace();
-//        }
-    }    
-      
+        cb = new CircleButtons();
+        tablero.add(cb);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -98,11 +57,11 @@ public class GameCFour extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 661, Short.MAX_VALUE)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 467, Short.MAX_VALUE)
+            .addGap(0, 300, Short.MAX_VALUE)
         );
 
         pack();
@@ -125,21 +84,20 @@ public class GameCFour extends JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GameCFour.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Test.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GameCFour.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Test.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GameCFour.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Test.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GameCFour.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Test.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
             public void run() {
-                new GameCFour().setVisible(true);
+                new Test().setVisible(true);
             }
         });
     }
