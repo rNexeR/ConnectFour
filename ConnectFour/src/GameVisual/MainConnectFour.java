@@ -52,8 +52,10 @@ public class MainConnectFour extends javax.swing.JFrame {
     private void loadUsers(){
         //Verificar que la carpeta exista
         File user = new File("GameFiles");
-        if (!user.exists())
-            user.mkdir();
+        if (!user.exists()){
+            user = new File("GameFiles"+File.separator+"usuarios");
+            user.mkdirs();
+        }
             
         
         user = new File("GameFiles" + File.separator + "Usuarios.cfo");
