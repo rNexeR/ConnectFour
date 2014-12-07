@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
@@ -43,6 +44,8 @@ public class MainConnectFour extends javax.swing.JFrame {
      */
     public MainConnectFour() {
         initComponents();
+        ImageIcon icono = new ImageIcon("icono.png"); 
+        this.setIconImage(icono.getImage()); 
         users = new ArrayList<>();
         loadUsers();
         createOptions();
@@ -108,6 +111,14 @@ public class MainConnectFour extends javax.swing.JFrame {
            System.out.println("Error al guardar Usuarios");
        }
         
+    }
+    
+    public boolean deleteUser(String username){
+        for (Usuarios x : users){
+            if (x.getUsername().equals(username))
+                return users.remove(x);
+        }
+        return false;
     }
     
     private void createOptions(){
@@ -408,6 +419,7 @@ public class MainConnectFour extends javax.swing.JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Connect Four - by NxRodriguez && RaimMaster");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
