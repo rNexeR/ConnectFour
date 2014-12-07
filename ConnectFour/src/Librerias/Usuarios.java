@@ -23,6 +23,30 @@ public class Usuarios {
         fechaNac = nac;
     }
 
+    public int getPterminadas() {
+        return pterminadas;
+    }
+
+    public void setPterminadas(int pterminadas) {
+        this.pterminadas = pterminadas;
+    }
+
+    public int getPpendientes() {
+        return ppendientes;
+    }
+
+    public void setPpendientes(int ppendientes) {
+        this.ppendientes = ppendientes;
+    }
+
+    public int getPuntos() {
+        return puntos;
+    }
+
+    public void setPuntos(int puntos) {
+        this.puntos = puntos;
+    }
+
     public Usuarios(int pterminadas, int ppendientes, int puntos, String nombre, String username, String password, long fechaNac) {
         this.pterminadas = pterminadas;
         this.ppendientes = ppendientes;

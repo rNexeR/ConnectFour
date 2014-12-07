@@ -70,7 +70,6 @@ public class MainConnectFour extends javax.swing.JFrame {
                      System.out.println("Archivo no encontrado");
                  }
                 while(rUsers.getFilePointer() < rUsers.length()){
-                    cod = rUsers.readInt();
                     username = rUsers.readUTF();
                     password = rUsers.readUTF();
                     nombre = rUsers.readUTF();
@@ -91,6 +90,24 @@ public class MainConnectFour extends javax.swing.JFrame {
              }
         }
        
+    }
+    
+    public void saveUsers(){
+       try {
+            rUsers.seek(0);
+            for (Usuarios x : users){
+                rUsers.writeUTF(x.getUsername());
+                rUsers.writeUTF(x.getPassword());
+                rUsers.writeUTF(x.getNombre());
+                rUsers.writeLong(x.getFechaNac());
+                rUsers.writeInt(x.getPterminadas());
+                rUsers.writeInt(x.getPpendientes());
+                rUsers.writeInt(x.getPuntos());
+            }
+       } catch (IOException ex) {
+           System.out.println("Error al guardar Usuarios");
+       }
+        
     }
     
     private void createOptions(){
@@ -158,6 +175,7 @@ public class MainConnectFour extends javax.swing.JFrame {
                 "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
             System .exit(0);
             //Escribir en el archivo de texto
+            saveUsers();
         }
     }   
     
