@@ -153,6 +153,14 @@ public class MainConnectFour extends javax.swing.JFrame {
         return null;
     }
     
+    private void close(){
+        if (JOptionPane .showConfirmDialog(rootPane, "¿Desea realmente salir del sistema?",
+                "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+            System .exit(0);
+            //Escribir en el archivo de texto
+        }
+    }   
+    
     private void btnaceptarActionPerformed(ActionEvent evt) {
         //Aqui el Codigo
         if (op == 'L'){
