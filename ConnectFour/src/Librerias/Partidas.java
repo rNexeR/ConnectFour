@@ -5,23 +5,26 @@
  */
 package Librerias;
 
+import java.util.Date;
+
 /**
  *
  * @author rnexer
  */
-public class Partidas {
-    private int numPartida;
+public class Partidas implements java.io.Serializable{
+    private int numPartida, turno;
     private String adversario;
     long fecha;
     char estado, resultado, tipoResultado;
 
-    public Partidas(int numPartida, String adversario, long fecha, char estado, char resultado, char tipoResultado) {
+    public Partidas(int numPartida, String adversario, long fecha, char estado, char resultado, char tipoResultado, int turno) {
         this.numPartida = numPartida;
         this.adversario = adversario;
         this.fecha = fecha;
         this.estado = estado;
         this.resultado = resultado;
         this.tipoResultado = tipoResultado;
+        this.turno = turno;
     }
 
     public int getNumPartida() {
@@ -71,5 +74,11 @@ public class Partidas {
     public void setTipoResultado(char tipoResultado) {
         this.tipoResultado = tipoResultado;
     }
+
+    @Override
+    public String toString() {
+        return numPartida + "Juego vs " + adversario + "Iniciando el" + new Date(fecha) + "- Turno: " + turno;
+    }
+    
     
 }

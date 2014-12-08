@@ -25,6 +25,11 @@ public class Main {
         int op = 0;
         boolean exit = false;
         
+        int numeros[] = {1,2};
+        int cant = numeros.length;
+        System.out.print(numeros.length);
+        
+        
         Prints.printlnWithColor("BLUE","     *******     444");
         Prints.printlnWithColor("BLUE","   ***         444 44");
         Prints.printlnWithColor("BLUE"," ***         444   44");
