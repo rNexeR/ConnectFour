@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 /**
@@ -20,12 +21,17 @@ public class GameCFour extends JFrame {
     private final static byte CANT_ROW = 6;
     private final static byte CANT_COL = 7;
     private final static byte CONNECTED_WIN = 4;//VALOR PARA GANAR
+    private final static int SIZE_PIEZA = 70;
+    
     private JPanel tablero;
     private JLayeredPane jlp;    
+    
     private final Color background = new Color(200, 200, 200);//por si quiero probar algun color
+    
     private JLabel[][] circulos; //potencial a usar
-    private final static int SIZE_PIEZA = 70;
     private CircleLabels cl;
+    JPanel [][] square;
+    private JButton col1, col2, col3, col4, col5, col6, col7;//para agregar circulos a cada columna
     //private Color c = new Color
     /**
      * Creates new form GameCFour
@@ -46,11 +52,13 @@ public class GameCFour extends JFrame {
         jlp.add(tablero, JLayeredPane.DEFAULT_LAYER);
         tablero.setLayout( new GridLayout(6, 7));
         tablero.setPreferredSize(boardSize);
-        tablero.setBounds(0, 0, boardSize.width, boardSize.height);
+        tablero.setBounds(0, 50, boardSize.width, boardSize.height);
         
         getContentPane().add(tablero);
-        JPanel [][] square = new JPanel[CANT_ROW][CANT_COL];
+        square = new JPanel[CANT_ROW][CANT_COL];
         //MOMENTO DE PRUEBA DE AGREGAR UN CIRCULO
+        
+        addButtons();
                 
         for (int i = 0; i < CANT_ROW; i++) {
             for(int j = 0; j < CANT_COL; j++){
@@ -92,6 +100,7 @@ public class GameCFour extends JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(661, 700));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -142,7 +151,135 @@ public class GameCFour extends JFrame {
             }
         });
     }
-
+    
+    private void downCircle(int col){
+        for (int i = CANT_ROW-1; i >= 0; i--) {
+            CircleLabels este = (CircleLabels)square[i][col].getComponent(0);
+            if (este.descripcion.equalsIgnoreCase("Ficha Blank")){
+                //Cambiar icon
+                return;
+            }
+        }
+    }
+    
+    private void col1ActionPerformed(ActionEvent evt) {
+        //Aqui el codigo
+        int col = 1;
+        downCircle(col);
+    }
+    
+    private void col2ActionPerformed(ActionEvent evt) {
+        //Aqui el codigo
+        int col = 2;
+    }
+    
+    private void col3ActionPerformed(ActionEvent evt) {
+        //Aqui el codigo
+        int col = 3;
+    }
+    
+    private void col4ActionPerformed(ActionEvent evt) {
+        //Aqui el codigo
+        int col = 4;
+    }
+    
+    private void col5ActionPerformed(ActionEvent evt) {
+        //Aqui el codigo
+        int col = 5;
+    }
+    
+    private void col6ActionPerformed(ActionEvent evt) {
+        //Aqui el codigo
+        int col = 6;
+    }
+    
+    private void col7ActionPerformed(ActionEvent evt) {
+        //Aqui el codigo
+        int col = 7;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+
+    private void addButtons() {
+        String texto = "Conectar";
+        Dimension dbotones = new Dimension(80, 30);
+        
+        col1 = new JButton();
+        col1.setText(texto);
+        col1.setSize(dbotones);
+        getContentPane().add(col1);
+        col1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                col1ActionPerformed(evt);
+            }
+        });
+        
+        col2 = new JButton();
+        col2.setText(texto);
+        col2.setSize(dbotones);
+        getContentPane().add(col2);
+        col2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                col2ActionPerformed(evt);
+            }
+        });
+        
+        col3 = new JButton();
+        col3.setText(texto);
+        col3.setSize(dbotones);
+        getContentPane().add(col3);
+        col3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                col3ActionPerformed(evt);
+            }
+        });
+        
+        col4 = new JButton();
+        col4.setText(texto);
+        col4.setSize(dbotones);
+        getContentPane().add(col4);
+        col4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                col4ActionPerformed(evt);
+            }
+        });
+        
+        col5 = new JButton();
+        col5.setText(texto);
+        col5.setSize(dbotones);
+        getContentPane().add(col5);
+        col5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                col5ActionPerformed(evt);
+            }
+        });
+        
+        col6 = new JButton();
+        col6.setText(texto);
+        col6.setSize(dbotones);
+        getContentPane().add(col6);
+        col6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                col6ActionPerformed(evt);
+            }
+        });
+        
+        col7 = new JButton();
+        col7.setText(texto);
+        col7.setSize(dbotones);
+        getContentPane().add(col7);
+        col7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                col7ActionPerformed(evt);
+            }
+        });
+        
+        col1.setLocation(0, 10);
+        col2.setLocation(85, 10);
+        col3.setLocation(170, 10);
+        col4.setLocation(255, 10);
+        col5.setLocation(340, 10);
+        col6.setLocation(425, 10);
+        col7.setLocation(510, 10);
+    }
 }

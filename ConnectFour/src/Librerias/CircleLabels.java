@@ -14,19 +14,23 @@ import javax.swing.ImageIcon;
  * @author Raim
  */
 public class CircleLabels extends JLabel{   
+    public String descripcion;
     public CircleLabels(){
         super();               
     }    
     
     public void setColorIcon(char color){
         ImageIcon icon;
-        if (color == 'A')
-            icon  = new ImageIcon("src/assets/YellowCircle.png", "Ficha Amarilla");
-        else if (color == 'R')
-            icon = new ImageIcon("src/assets/RedCircle.png", "Ficha Roja");
-        else             
-            icon  = new ImageIcon("src/assets/BlankCircle.png", "Ficha Amarilla");
-
+        if (color == 'A'){
+            descripcion = "Ficha Amarilla";
+            icon  = new ImageIcon("src/assets/YellowCircle.png", descripcion);
+        }else if (color == 'R'){
+            descripcion = "Ficha Roja";
+            icon = new ImageIcon("src/assets/RedCircle.png", descripcion);
+        }else{          
+            descripcion = "Ficha Blank";
+            icon  = new ImageIcon("src/assets/BlankCircle.png", descripcion);
+        }
         setIcon(icon);
     }
 }
