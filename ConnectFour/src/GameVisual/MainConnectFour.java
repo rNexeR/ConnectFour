@@ -225,9 +225,11 @@ public class MainConnectFour extends javax.swing.JFrame {
             //addUser
             String usern = txtuser.getText();
             Usuarios buscar = searchUser(usern);
-            if (buscar != null)
+            if (buscar != null){
+                JOptionPane.showMessageDialog(this, "Usuario ya Existe", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                exitAddUser();
                 return;
-            else{
+            }else{
                 String pass = new String(txtpass.getPassword());
                 String name = txtnombre.getText();
                 long fec = getTime(txtfecha.getText());
