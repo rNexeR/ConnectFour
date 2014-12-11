@@ -6,6 +6,7 @@
 package GameVisual;
 
 import Librerias.CircleLabels;
+import Librerias.Usuarios;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -32,13 +33,20 @@ public class GameCFour extends JFrame {
     private CircleLabels cl;
     JPanel [][] square;
     private JButton col1, col2, col3, col4, col5, col6, col7;//para agregar circulos a cada columna
+    
     private char colorActual = 'R';
+    
+    //Variables para la partida
+    private Usuarios user1, user2;
+    
     //private Color c = new Color
     /**
      * Creates new form GameCFour
      */
-    public GameCFour() {
+    public GameCFour(Usuarios user1, Usuarios user2) {
         initComponents();
+        this.user1 = user1;
+        this.user2 = user2;
         createBoard();
     }    
     
@@ -148,7 +156,7 @@ public class GameCFour extends JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new GameCFour().setVisible(true);
+                new GameCFour(null, null).setVisible(true);
             }
         });
     }
@@ -165,59 +173,58 @@ public class GameCFour extends JFrame {
         return false;
     }
     
+    private void validarGameOver(int col){
+        if (downCircle(col)){
+            System.out.println("Ganaste");
+            desactivarConectores();
+        }else if (empate()){
+            System.out.println("Empate");
+            desactivarConectores();
+        }else{
+            colorActual = colorActual=='R'?'A':'R';
+        }
+    }
+    
     private void col1ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 0;
-        if (downCircle(col))
-            System.out.println("Ganaste");
-        colorActual = colorActual=='R'?'A':'R';
+        validarGameOver(col);
     }
     
     private void col2ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 1;
-        if (downCircle(col))
-            System.out.println("Ganaste");
-        colorActual = colorActual=='R'?'A':'R';
+        validarGameOver(col);
     }
     
     private void col3ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 2;
-        if (downCircle(col))
-            System.out.println("Ganaste");
-        colorActual = colorActual=='R'?'A':'R';
+        validarGameOver(col);
     }
     
     private void col4ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 3;
-        if (downCircle(col))
-            System.out.println("Ganaste");
-        colorActual = colorActual=='R'?'A':'R';
+        validarGameOver(col);
     }
     
     private void col5ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 4;
-        if (downCircle(col))
-            System.out.println("Ganaste");
-        colorActual = colorActual=='R'?'A':'R';
+        validarGameOver(col);
     }
     
     private void col6ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 5;
-        if (downCircle(col))
-            System.out.println("Ganaste");
+        validarGameOver(col);
     }
     
     private void col7ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 6;
-        if (downCircle(col))
-            System.out.println("Ganaste");
-        colorActual = colorActual=='R'?'A':'R';
+        validarGameOver(col);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
@@ -319,6 +326,28 @@ public class GameCFour extends JFrame {
         if (contador>=4)
             return true;
         return false;
+    }
+    
+    private boolean empate(){
+        CircleLabels h;
+        for (int i = 0; i < CANT_ROW; i++) {
+            for(int j = 0; j < CANT_COL; j++){
+                h = (CircleLabels)square[i][j].getComponent(0);
+                if (h.descripcion != "Ficha Blank")
+                    return false;
+            }
+        }
+        return true;
+    }
+    
+    private void desactivarConectores(){
+        col1.setEnabled(false);
+        col2.setEnabled(false);
+        col3.setEnabled(false);
+        col4.setEnabled(false);
+        col5.setEnabled(false);
+        col6.setEnabled(false);
+        col7.setEnabled(false);
     }
     
     private void addButtons() {
