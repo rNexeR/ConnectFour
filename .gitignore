@@ -54,3 +54,5 @@ project-root-directory/
 hs_err_pid*
 /ConnectFour/nbproject/private/
 *.properties
+*.properties
+*.properties
