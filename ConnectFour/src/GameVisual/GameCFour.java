@@ -32,6 +32,7 @@ public class GameCFour extends JFrame {
     private CircleLabels cl;
     JPanel [][] square;
     private JButton col1, col2, col3, col4, col5, col6, col7;//para agregar circulos a cada columna
+    private char colorActual = 'R';
     //private Color c = new Color
     /**
      * Creates new form GameCFour
@@ -156,9 +157,9 @@ public class GameCFour extends JFrame {
         for (int i = CANT_ROW-1; i >= 0; i--) {
             CircleLabels este = (CircleLabels)square[i][col].getComponent(0);
             if (este.descripcion.equalsIgnoreCase("Ficha Blank")){
-                este.setColorIcon('R');
+                este.setColorIcon(colorActual);
                 System.out.println(este.color);
-                return fourConnected(i, col, 'R');
+                return fourConnected(i, col, colorActual);
             }
         }
         return false;
@@ -169,6 +170,7 @@ public class GameCFour extends JFrame {
         int col = 0;
         if (downCircle(col))
             System.out.println("Ganaste");
+        colorActual = colorActual=='R'?'A':'R';
     }
     
     private void col2ActionPerformed(ActionEvent evt) {
@@ -176,6 +178,7 @@ public class GameCFour extends JFrame {
         int col = 1;
         if (downCircle(col))
             System.out.println("Ganaste");
+        colorActual = colorActual=='R'?'A':'R';
     }
     
     private void col3ActionPerformed(ActionEvent evt) {
@@ -183,6 +186,7 @@ public class GameCFour extends JFrame {
         int col = 2;
         if (downCircle(col))
             System.out.println("Ganaste");
+        colorActual = colorActual=='R'?'A':'R';
     }
     
     private void col4ActionPerformed(ActionEvent evt) {
@@ -190,6 +194,7 @@ public class GameCFour extends JFrame {
         int col = 3;
         if (downCircle(col))
             System.out.println("Ganaste");
+        colorActual = colorActual=='R'?'A':'R';
     }
     
     private void col5ActionPerformed(ActionEvent evt) {
@@ -197,6 +202,7 @@ public class GameCFour extends JFrame {
         int col = 4;
         if (downCircle(col))
             System.out.println("Ganaste");
+        colorActual = colorActual=='R'?'A':'R';
     }
     
     private void col6ActionPerformed(ActionEvent evt) {
@@ -211,6 +217,7 @@ public class GameCFour extends JFrame {
         int col = 6;
         if (downCircle(col))
             System.out.println("Ganaste");
+        colorActual = colorActual=='R'?'A':'R';
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
