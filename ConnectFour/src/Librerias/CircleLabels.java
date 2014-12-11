@@ -15,11 +15,13 @@ import javax.swing.ImageIcon;
  */
 public class CircleLabels extends JLabel{   
     public String descripcion;
+    public char color;
     public CircleLabels(){
         super();               
     }    
     
     public void setColorIcon(char color){
+        this.color = color;
         ImageIcon icon;
         if (color == 'A'){
             descripcion = "Ficha Amarilla";

@@ -28,7 +28,7 @@ public class GameCFour extends JFrame {
     
     private final Color background = new Color(200, 200, 200);//por si quiero probar algun color
     
-    private JLabel[][] circulos; //potencial a usar
+    //private JLabel[][] circulos; //potencial a usar
     private CircleLabels cl;
     JPanel [][] square;
     private JButton col1, col2, col3, col4, col5, col6, col7;//para agregar circulos a cada columna
@@ -152,54 +152,168 @@ public class GameCFour extends JFrame {
         });
     }
     
-    private void downCircle(int col){
+    private boolean downCircle(int col){
         for (int i = CANT_ROW-1; i >= 0; i--) {
             CircleLabels este = (CircleLabels)square[i][col].getComponent(0);
             if (este.descripcion.equalsIgnoreCase("Ficha Blank")){
-                //Cambiar icon
-                return;
+                este.setColorIcon('R');
+                System.out.println(este.color);
+                return fourConnected(i, col, 'R');
             }
         }
+        return false;
     }
     
     private void col1ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
-        int col = 1;
-        downCircle(col);
+        int col = 0;
+        if (downCircle(col))
+            System.out.println("Ganaste");
     }
     
     private void col2ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
-        int col = 2;
+        int col = 1;
+        if (downCircle(col))
+            System.out.println("Ganaste");
     }
     
     private void col3ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
-        int col = 3;
+        int col = 2;
+        if (downCircle(col))
+            System.out.println("Ganaste");
     }
     
     private void col4ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
-        int col = 4;
+        int col = 3;
+        if (downCircle(col))
+            System.out.println("Ganaste");
     }
     
     private void col5ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
-        int col = 5;
+        int col = 4;
+        if (downCircle(col))
+            System.out.println("Ganaste");
     }
     
     private void col6ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
-        int col = 6;
+        int col = 5;
+        if (downCircle(col))
+            System.out.println("Ganaste");
     }
     
     private void col7ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
-        int col = 7;
+        int col = 6;
+        if (downCircle(col))
+            System.out.println("Ganaste");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
+    private boolean fourConnected(int row, int col, char color){
+        if (connectedLineH(row, color) || connectedLineV(col, color) || connectedLineDA(row, col, color) || connectedLineDD(row, col, color))
+            return true;
+        return false;
+    }
+    
+    private boolean connectedLineH(int row, char color){
+        CircleLabels h;
+        int conectados = 0;
+        for (int contador = 0; contador < 7; contador++) {
+            h = (CircleLabels)square[row][contador].getComponent(0);
+            if (h.color == color){
+                conectados++;
+                if (conectados>=4)
+                    break;
+            }else
+                conectados=0;
+        }
+        System.out.println(conectados);
+        if (conectados >= 4)
+            return true;
+        return false;
+    }
+    
+    private boolean connectedLineV(int col, char color){
+        CircleLabels h;
+        int conectados = 0;
+        for (int contador = 0; contador < 6; contador++) {
+            h = (CircleLabels)square[contador][col].getComponent(0);
+            if (h.color == color){
+                conectados++;
+                if (conectados>=4)
+                    break;
+            }else
+                conectados = 0;
+        }
+        
+        if (conectados >= 4)
+            return true;
+        return false;
+    }
+    
+    private boolean connectedLineDD(int row, int col, char color){
+        while(col>0 || row>0){
+            col--;
+            row--;
+        }
+        int contador = 0;
+        CircleLabels h;
+        
+        while(col<=6 || row<=5){
+            try{
+                h = (CircleLabels)square[col][row].getComponent(0);
+            }catch(Exception e){
+                break;
+            }
+            if (h.color == color){
+                contador++;
+                if (contador>=4)
+                    break;
+            }else
+                contador = 0;
+            col++; 
+            row++;
+        }
+        if (contador>=4)
+            return true;
+        return false;
+    }
+    
+    private boolean connectedLineDA(int row, int col, char color){
+        while(col>0 || row<5){
+            col--;
+            row++;
+        }
+        int contador = 0;
+        CircleLabels h;
+        
+        while(col<=6 || row>=0){
+            try{
+                h= (CircleLabels)square[col][row].getComponent(0);
+            }catch(Exception e){
+                break;
+            }
+            if (h.color == color){
+                contador++;
+                if (contador>=4)
+                    break;
+            }else
+                contador = 0;
+            col++; 
+            row--;
+        }
+        
+        if (contador>=4)
+            return true;
+        return false;
+    }
+    
     private void addButtons() {
         String texto = "Conectar";
         Dimension dbotones = new Dimension(80, 30);
