@@ -6,12 +6,18 @@
 package GameVisual;
 
 import Librerias.CircleLabels;
+import Librerias.Partidas;
 import Librerias.Usuarios;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.Calendar;
 import javax.swing.*;
 
 /**
@@ -37,7 +43,14 @@ public class GameCFour extends JFrame {
     private char colorActual = 'R';
     
     //Variables para la partida
+    Partidas actual;
+    private int numPartida;
     private Usuarios user1, user2;
+    private long fecha;
+    private char estadoPartida;
+    private char resultadoPartida;
+    private char tipoResultado;
+    private int turno;
     
     //private Color c = new Color
     /**
@@ -48,7 +61,17 @@ public class GameCFour extends JFrame {
         this.user1 = user1;
         this.user2 = user2;
         createBoard();
-    }    
+        crearSquares();
+        turno = 1;
+        fecha = Calendar.getInstance().getTimeInMillis();
+    }
+    
+    public GameCFour(String filenamePartida, String filenameCirculos){
+        initComponents();
+        //Extraer Serializados
+        loadSquares(filenameCirculos);
+        
+    }
     
     public void createBoard(){
         Dimension boardSize = new Dimension(600, 600);
@@ -68,23 +91,7 @@ public class GameCFour extends JFrame {
         //MOMENTO DE PRUEBA DE AGREGAR UN CIRCULO
         
         addButtons();
-                
-        for (int i = 0; i < CANT_ROW; i++) {
-            for(int j = 0; j < CANT_COL; j++){
-                square [i][j] = new JPanel( new BorderLayout() );
-                CircleLabels cl = new CircleLabels();
-                square[i][j].add(cl);
-                cl.setColorIcon('D');
-                tablero.add(square [i][j]);
-                //int row = (i / CANT_ROW) % 2;
-                //if (row == 0){//0, 2, 4                  
-                square[i][j].setBackground(Color.white );    
-                    //square[i][j].setBorder(new Border());
-                //}else{                 
-                //square[i][j].setBackground((i + j) % 2 == 0 ? Color.white : Color.black ); 
-                //}
-            }           
-        }      
+        
         
         
 //        
@@ -125,6 +132,56 @@ public class GameCFour extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    void crearSquares(){
+        for (int i = 0; i < CANT_ROW; i++) {
+            for(int j = 0; j < CANT_COL; j++){
+                square [i][j] = new JPanel( new BorderLayout() );
+                CircleLabels cl = new CircleLabels();
+                square[i][j].add(cl);
+                cl.setColorIcon('D');
+                tablero.add(square [i][j]);
+                //int row = (i / CANT_ROW) % 2;
+                //if (row == 0){//0, 2, 4                  
+                square[i][j].setBackground(Color.white );    
+                    //square[i][j].setBorder(new Border());
+                //}else{                 
+                //square[i][j].setBackground((i + j) % 2 == 0 ? Color.white : Color.black ); 
+                //}
+            }           
+        }      
+    }
+    
+    void loadSquares(String filename){
+        try{
+            FileInputStream fileIn = new FileInputStream(filename);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            square = (JPanel[][])in.readObject();
+            for (int i = 0; i < CANT_ROW; i++) {
+                for(int j = 0; j < CANT_COL; j++){
+                    tablero.add(square [i][j]);
+                }
+            }
+        }catch (Exception e){
+            System.out.println("Error al cargar Partida");
+        }
+    }
+    
+    void loadPartida(String filename){
+        try{
+            FileInputStream fileIn = new FileInputStream(filename);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            
+            actual = (Partidas)in.readObject();
+            fecha = actual.getFecha();
+            turno = actual.getTurno();
+//            user1 = actual.getUsuario();
+//            user2 = actual.getAdversario();
+            
+        }catch (Exception e){
+            System.out.println("Error al cargar Partida");
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -156,7 +213,7 @@ public class GameCFour extends JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new GameCFour(null, null).setVisible(true);
+                new GameCFour(new Usuarios(), new Usuarios()).setVisible(true);
             }
         });
     }
@@ -166,7 +223,8 @@ public class GameCFour extends JFrame {
             CircleLabels este = (CircleLabels)square[i][col].getComponent(0);
             if (este.descripcion.equalsIgnoreCase("Ficha Blank")){
                 este.setColorIcon(colorActual);
-                System.out.println(este.color);
+                //System.out.println(este.color);
+                getContentPane().repaint();
                 return fourConnected(i, col, colorActual);
             }
         }
@@ -175,12 +233,14 @@ public class GameCFour extends JFrame {
     
     private void validarGameOver(int col){
         if (downCircle(col)){
-            System.out.println("Ganaste");
             desactivarConectores();
+            String nombre = colorActual=='R'?user1.getNombre():user2.getNombre();
+            JOptionPane.showMessageDialog(this, "Ha ganado el jugador " + nombre, "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
         }else if (empate()){
-            System.out.println("Empate");
             desactivarConectores();
+            JOptionPane.showMessageDialog(this, "Empate Declarado, han ganado 1 pt cada uno", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
         }else{
+            turno++;
             colorActual = colorActual=='R'?'A':'R';
         }
     }
@@ -229,6 +289,16 @@ public class GameCFour extends JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
+    private void terminarPartida(char estado, char resultado, char tipoResultado){
+        File usuario = new File("GameFiles"+File.separator+"usuarios"+File.separator+user1.getUsername());
+        int cant = usuario.listFiles().length+1;
+        if (estado == 'T'){
+            actual = new Partidas(cant, user1.getUsername(), user2.getUsername(), fecha, 'T', resultado, tipoResultado, turno);
+        }else{
+            
+        }
+    }
+    
     private boolean fourConnected(int row, int col, char color){
         if (connectedLineH(row, color) || connectedLineV(col, color) || connectedLineDA(row, col, color) || connectedLineDD(row, col, color))
             return true;
@@ -247,7 +317,6 @@ public class GameCFour extends JFrame {
             }else
                 conectados=0;
         }
-        System.out.println(conectados);
         if (conectados >= 4)
             return true;
         return false;
@@ -272,27 +341,34 @@ public class GameCFour extends JFrame {
     }
     
     private boolean connectedLineDD(int row, int col, char color){
-        while(col>0 || row>0){
+        System.out.println(color);
+        while(col>0 && row>0){
+            System.out.println("Entro al while");
             col--;
             row--;
         }
+        System.out.println("Inicio: " + row + " - " + col);
         int contador = 0;
         CircleLabels h;
         
-        while(col<=6 || row<=5){
+        while(col<=6 && row<=5){
+            System.out.println(row + " - " + col);
             try{
-                h = (CircleLabels)square[col][row].getComponent(0);
+                h = (CircleLabels)square[row][col].getComponent(0);
+                System.out.println(h.color);
             }catch(Exception e){
                 break;
             }
             if (h.color == color){
                 contador++;
-                if (contador>=4)
+                if (contador>=4){
                     break;
+                }
             }else
                 contador = 0;
             col++; 
             row++;
+            System.out.println(contador);
         }
         if (contador>=4)
             return true;
@@ -300,23 +376,24 @@ public class GameCFour extends JFrame {
     }
     
     private boolean connectedLineDA(int row, int col, char color){
-        while(col>0 || row<5){
+        while(col>0 && row<5){
             col--;
             row++;
         }
         int contador = 0;
         CircleLabels h;
         
-        while(col<=6 || row>=0){
+        while(col<=6 && row>=0){
             try{
-                h= (CircleLabels)square[col][row].getComponent(0);
+                h= (CircleLabels)square[row][col].getComponent(0);
             }catch(Exception e){
                 break;
             }
             if (h.color == color){
                 contador++;
-                if (contador>=4)
+                if (contador>=4){
                     break;
+                }
             }else
                 contador = 0;
             col++; 

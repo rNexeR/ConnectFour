@@ -192,13 +192,9 @@ public class MainConnectFour extends javax.swing.JFrame {
     }
     
     private void close(){
-        if (JOptionPane .showConfirmDialog(rootPane, "¿Desea realmente salir del sistema?",
-                "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
-            saveUsers();
+        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente salir del sistema?",
+                "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION)
             System .exit(0);
-            //Escribir en el archivo de texto
-            
-        }
     }   
     
     private void btnaceptarActionPerformed(ActionEvent evt) {
@@ -236,6 +232,8 @@ public class MainConnectFour extends javax.swing.JFrame {
                 users.add(new Usuarios(name, usern, pass, fec));
                 System.out.println("Usuario Creado");
                 saveUsers();
+                File user = new File("GameFiles"+File.separator+"usuarios"+File.separator+name);
+                user.mkdirs();
                 JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
                 exitAddUser();
             }

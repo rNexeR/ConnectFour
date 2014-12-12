@@ -13,12 +13,13 @@ import java.util.Date;
  */
 public class Partidas implements java.io.Serializable{
     private int numPartida, turno;
-    private String adversario;
+    private String usuario, adversario;
     long fecha;
     char estado, resultado, tipoResultado;
 
-    public Partidas(int numPartida, String adversario, long fecha, char estado, char resultado, char tipoResultado, int turno) {
+    public Partidas(int numPartida, String usuario, String adversario, long fecha, char estado, char resultado, char tipoResultado, int turno) {
         this.numPartida = numPartida;
+        this.usuario = usuario;
         this.adversario = adversario;
         this.fecha = fecha;
         this.estado = estado;
@@ -57,6 +58,22 @@ public class Partidas implements java.io.Serializable{
 
     public void setEstado(char estado) {
         this.estado = estado;
+    }
+
+    public int getTurno() {
+        return turno;
+    }
+
+    public void setTurno(int turno) {
+        this.turno = turno;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public char getResultado() {

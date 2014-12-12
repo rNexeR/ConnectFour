@@ -22,6 +22,10 @@ public class Usuarios {
     	password = pass;
         fechaNac = nac;
     }
+    
+    public Usuarios(){
+        
+    }
 
     public int getPterminadas() {
         return pterminadas;
