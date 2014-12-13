@@ -328,12 +328,22 @@ public class GameCFour extends JFrame {
     
     private void pausaActionPerformed(ActionEvent evt) {
         //Aqui el codigo
-        terminarPartida('P', 'V', 'V');
+        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente salir del sistema?", "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+            terminarPartida('P', 'V', 'V');
+            JOptionPane.showMessageDialog(this, "Partida pausada exitosamente, puede reanudarla desde el menu principal", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
     
     private void retirarActionPerformed(ActionEvent evt) {
         //Aqui el codigo
-        terminarPartida('T', 'P', 'R');
+        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente salir del sistema?", "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+            if (loggedIn == usuarioActual)
+                terminarPartida('T', 'P', 'R');
+            else
+                terminarPartida('T', 'G', 'R');
+            JOptionPane.showMessageDialog(this, "Partida pausada exitosamente, puede reanudarla desde el menu principal", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+        }
+        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
@@ -362,9 +372,31 @@ public class GameCFour extends JFrame {
     }
     
     private void terminarPartidaNueva(char estado, char resultado, char tipoResultado){
-        int num = GameNumeraciones.getNextNumPartida(loggedIn);
-        actual = new Partidas(num, user1.getUsername(), user2.getUsername(), fecha, 'T', resultado, tipoResultado, turno);
-        //Serializar tablero y Archivo binario
+        int numP = GameNumeraciones.getNextNumPartida(loggedIn);
+        int numT = GameNumeraciones.getNextNumTablero(loggedIn);
+        actual = new Partidas(numP, user1.getUsername(), user2.getUsername(), fecha, 'T', resultado, tipoResultado, turno);
+        
+        File n = new File("GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername() + File.separator + "partida#"+ numP + ".par");
+        try {
+            RandomAccessFile m = new RandomAccessFile(n, "rw");
+            m.writeInt(numP);
+            m.writeUTF(user1.getUsername());
+            m.writeUTF(user2.getUsername());
+            m.writeLong(fecha);
+            m.writeChar(estado);
+            m.writeChar(resultado);
+            m.writeChar(tipoResultado);
+            m.close();
+            
+            String dir = "GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername() + File.separator + "tableros" + File.separator + numT +".ser";
+            FileOutputStream fileOut = new FileOutputStream(dir);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(square);
+            out.close();
+            fileOut.close();
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
     
     private int getNumeroPartida(String filename){
