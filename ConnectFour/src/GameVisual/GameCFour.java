@@ -262,13 +262,13 @@ public class GameCFour extends JFrame {
             //terminarPartida
         }else{
             turno++;
-            colorActual = colorActual=='R'?'A':'R';
+            //colorActual = colorActual=='R'?'A':'R';
             if (colorActual == 'R'){
                 colorActual = 'A';
                 usuarioActual = user2;
                 activarOpciones(false);
             }else{
-                colorActual = 'A';
+                colorActual = 'R';
                 usuarioActual = user1;
                 activarOpciones(true);
             }
