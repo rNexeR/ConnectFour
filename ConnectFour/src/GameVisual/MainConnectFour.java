@@ -134,17 +134,23 @@ public class MainConnectFour extends javax.swing.JFrame {
                 exitAddUser();
                 return;
             }else{
-                String pass = new String(txtpass.getPassword());
-                String name = txtnombre.getText();
-                long fec = getTime(txtfecha.getText());
-                GameUsuarios.users.add(new Usuarios(name, usern, pass, fec));
-                System.out.println("Usuario Creado");
-                GameUsuarios.saveUsers();
-                File user = new File("GameFiles"+File.separator+"usuarios"+File.separator+name+File.separator+"tableros");
-                user.mkdirs();
-                crearNumeraciones(name);
-                JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-                exitAddUser();
+                try{
+                    String pass = new String(txtpass.getPassword());
+                    String name = txtnombre.getText();
+                    long fec = getTime(txtfecha.getText());
+                    GameUsuarios.users.add(new Usuarios(name, usern, pass, fec));
+                    System.out.println("Usuario Creado");
+                    GameUsuarios.saveUsers();
+                    File user = new File("GameFiles"+File.separator+"usuarios"+File.separator+name+File.separator+"tableros");
+                    user.mkdirs();
+                    crearNumeraciones(name);
+                    JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                    exitAddUser();
+                }catch(NullPointerException ex){
+                    JOptionPane.showMessageDialog(this, "Llene todos los campos con el formato requerido, de tenerlo", "Error", JOptionPane.ERROR_MESSAGE);
+                    System.out.println("Campos Vacios");
+                }
+                
             }
         }
     }
