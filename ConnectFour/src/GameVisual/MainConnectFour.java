@@ -322,6 +322,7 @@ public class MainConnectFour extends javax.swing.JFrame {
         getContentPane().add(btncancelar);
         
         btnaceptar.setLocation(txtuser.getX()+txtuser.getWidth(), txtuser.getY());
+        btnaceptar.setText("Aceptar");
         btncancelar.setLocation(txtpass.getX()+txtpass.getWidth(), txtpass.getY());
     }
     
