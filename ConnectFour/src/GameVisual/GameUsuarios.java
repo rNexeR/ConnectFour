@@ -57,8 +57,7 @@ public class GameUsuarios {
         
         try {
             user.createNewFile();
-            rUsers = new RandomAccessFile(user, "rw");
-        
+            rUsers = new RandomAccessFile(user, "rw");        
             rUsers.seek(0);
             for (Usuarios x : users){
                 rUsers.writeUTF(x.getUsername());

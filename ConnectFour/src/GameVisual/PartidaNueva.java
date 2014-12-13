@@ -12,7 +12,7 @@ import Librerias.Usuarios;
  * @author Raim
  */
 public class PartidaNueva extends javax.swing.JInternalFrame {
-
+    Usuarios loggedUser;
     /**
      * Creates new form PartidaNueva
      * @param currentUser
@@ -20,6 +20,7 @@ public class PartidaNueva extends javax.swing.JInternalFrame {
     public PartidaNueva(Usuarios currentUser) {
         initComponents();
         GameUsuarios.loadUsers(); 
+        loggedUser = currentUser;
         for(Usuarios u : GameUsuarios.users){
             System.out.println(u.getNombre());
             if(u != currentUser)
@@ -44,6 +45,11 @@ public class PartidaNueva extends javax.swing.JInternalFrame {
         jLabel1.setText("Adversario: ");
 
         jBAceptar.setText("Aceptar");
+        jBAceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBAceptarActionPerformed(evt);
+            }
+        });
 
         jBSalir.setText("Salir");
         jBSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -91,6 +97,13 @@ public class PartidaNueva extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_jBSalirActionPerformed
+
+    private void jBAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAceptarActionPerformed
+        // TODO add your handling code here:
+        System.out.println("ACEPTAR - NEW GAME!");
+        new GameCFour(loggedUser, GameUsuarios.searchUser(jCUsuarios.getSelectedItem().toString())).setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jBAceptarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
