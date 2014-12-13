@@ -5,6 +5,8 @@
  */
 package GameVisual;
 
+import Librerias.Usuarios;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -12,12 +14,14 @@ import javax.swing.JOptionPane;
  * @author Raim
  */
 public class Menu extends javax.swing.JFrame {
-
+    public Usuarios loggedUser;
+     
     /**
      * Creates new form Menu
      */
-    public Menu() {
+    public Menu(Usuarios u) {
         initComponents();
+        loggedUser = u;
     }
 
     /**
@@ -156,7 +160,7 @@ public class Menu extends javax.swing.JFrame {
 
     private void jmiPartidaNuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiPartidaNuevaActionPerformed
         // TODO add your handling code here:
-        PartidaNueva pn = new PartidaNueva();
+        PartidaNueva pn = new PartidaNueva(loggedUser);
         jDMenus.add(pn);
         pn.show();
     }//GEN-LAST:event_jmiPartidaNuevaActionPerformed
@@ -242,7 +246,7 @@ public class Menu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Menu().setVisible(true);
+                new Menu(null).setVisible(true);
             }
         });
     }

@@ -15,12 +15,16 @@ public class PartidaNueva extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form PartidaNueva
+     * @param currentUser
      */
-    public PartidaNueva() {
+    public PartidaNueva(Usuarios currentUser) {
         initComponents();
         GameUsuarios.loadUsers(); 
-        for(Usuarios u : GameUsuarios.users)
-            jCUsuarios.addItem(u.getNombre());
+        for(Usuarios u : GameUsuarios.users){
+            System.out.println(u.getNombre());
+            if(u != currentUser)
+                jCUsuarios.addItem(u.getNombre());
+        }
     }
 
     /**

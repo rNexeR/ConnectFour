@@ -18,54 +18,36 @@ import java.util.ArrayList;
  * @author KELVIN
  */
 public class GameUsuarios {
-    public static ArrayList<Usuarios> users = new ArrayList<>();;
+    public static ArrayList<Usuarios> users = new ArrayList<>();
     public static RandomAccessFile rUsers;
     
     public static void loadUsers(){
-        //Verificar que la carpeta exista
-        File user = new File("GameFiles");
-        if (!user.exists()){
-            user = new File("GameFiles"+File.separator+"usuarios");
-            user.mkdirs();
-        }
-            
+        //Verificar que la carpeta exista          
+        File user = new File("GameFiles"+File.separator+"usuarios");           
+        user.mkdirs();
         
         user = new File("GameFiles" + File.separator + "usuarios.cfo");
-       
-        int cod, ppendientes, pterminadas, puntos;
+        int ppendientes, pterminadas, puntos;
         String nombre, username, password;
         long fecha;
         
-        if (user.exists()){
-            try {
-                //Cargar Usuarios
-                 try {
-                     rUsers = new RandomAccessFile(user, "rw");
-                 } catch (FileNotFoundException ex) {
-                     System.out.println("Archivo no encontrado");
-                 }
-                while(rUsers.getFilePointer() < rUsers.length()){
-                    username = rUsers.readUTF();
-                    password = rUsers.readUTF();
-                    nombre = rUsers.readUTF();
-                    fecha = rUsers.readLong();
-                    pterminadas = rUsers.readInt();
-                    ppendientes = rUsers.readInt();
-                    puntos = rUsers.readInt();
-                    users.add(new Usuarios(pterminadas, ppendientes, puntos, nombre, username, password, fecha));
-                }
-                rUsers.close();
-            } catch (IOException ex) {
-                System.out.println("Usuarios.cfo: Error al cargar");
-            }
-        }else{
-             try {
-                 user.createNewFile();
-             } catch (IOException ex) {
-                 System.out.println("Usuarios.cfo: Error al crear");
-             }
-        }
-       
+        try {                           
+            rUsers = new RandomAccessFile(user, "rw");             
+            while(rUsers.getFilePointer() < rUsers.length()){               
+                username = rUsers.readUTF();               
+                password = rUsers.readUTF();                 
+                nombre = rUsers.readUTF();   
+                fecha = rUsers.readLong();     
+                pterminadas = rUsers.readInt();
+                ppendientes = rUsers.readInt();
+                puntos = rUsers.readInt();               
+                if (searchUser(username) == null)                  
+                    users.add(new Usuarios(pterminadas, ppendientes, puntos, nombre, username, password, fecha));               
+            }              
+            rUsers.close();            
+        } catch (IOException ex) {              
+            System.out.println("Usuarios.cfo: Error al cargar");           
+        }       
     }
     
     public static void saveUsers(){
