@@ -5,6 +5,8 @@
  */
 package GameVisual;
 
+import Librerias.Usuarios;
+
 /**
  *
  * @author Raim
@@ -16,6 +18,9 @@ public class PartidaNueva extends javax.swing.JInternalFrame {
      */
     public PartidaNueva() {
         initComponents();
+        GameUsuarios.loadUsers(); 
+        for(Usuarios u : GameUsuarios.users)
+            jCUsuarios.addItem(u.getNombre());
     }
 
     /**
@@ -32,8 +37,6 @@ public class PartidaNueva extends javax.swing.JInternalFrame {
         jBAceptar = new javax.swing.JButton();
 
         jLabel1.setText("Adversario: ");
-
-        jCUsuarios.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jBAceptar.setText("Aceptar");
 

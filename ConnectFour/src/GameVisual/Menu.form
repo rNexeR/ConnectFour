@@ -9,22 +9,25 @@
             <Property name="text" type="java.lang.String" value="Jugar"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+            <MenuItem class="javax.swing.JMenuItem" name="jmiPartidaNueva">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Partida Nueva"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmiPartidaNuevaActionPerformed"/>
+              </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
+            <MenuItem class="javax.swing.JMenuItem" name="jmiCargar">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Cargar Partida"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+            <MenuItem class="javax.swing.JMenuItem" name="jmiEliminarPartida">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Eliminar Partida"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
+            <MenuItem class="javax.swing.JMenuItem" name="jmiTransferir">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Transferir Partida"/>
               </Properties>

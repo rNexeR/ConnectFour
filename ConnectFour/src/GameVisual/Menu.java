@@ -30,10 +30,10 @@ public class Menu extends javax.swing.JFrame {
         jDMenus = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        jmiPartidaNueva = new javax.swing.JMenuItem();
+        jmiCargar = new javax.swing.JMenuItem();
+        jmiEliminarPartida = new javax.swing.JMenuItem();
+        jmiTransferir = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -56,17 +56,22 @@ public class Menu extends javax.swing.JFrame {
 
         jMenu1.setText("Jugar");
 
-        jMenuItem1.setText("Partida Nueva");
-        jMenu1.add(jMenuItem1);
+        jmiPartidaNueva.setText("Partida Nueva");
+        jmiPartidaNueva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiPartidaNuevaActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jmiPartidaNueva);
 
-        jMenuItem2.setText("Cargar Partida");
-        jMenu1.add(jMenuItem2);
+        jmiCargar.setText("Cargar Partida");
+        jMenu1.add(jmiCargar);
 
-        jMenuItem3.setText("Eliminar Partida");
-        jMenu1.add(jMenuItem3);
+        jmiEliminarPartida.setText("Eliminar Partida");
+        jMenu1.add(jmiEliminarPartida);
 
-        jMenuItem4.setText("Transferir Partida");
-        jMenu1.add(jMenuItem4);
+        jmiTransferir.setText("Transferir Partida");
+        jMenu1.add(jmiTransferir);
 
         jMenuBar1.add(jMenu1);
 
@@ -112,6 +117,13 @@ public class Menu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jmiPartidaNuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiPartidaNuevaActionPerformed
+        // TODO add your handling code here:
+        PartidaNueva pn = new PartidaNueva();
+        jDMenus.add(pn);
+        pn.show();
+    }//GEN-LAST:event_jmiPartidaNuevaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -154,12 +166,12 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jmiCargar;
+    private javax.swing.JMenuItem jmiEliminarPartida;
+    private javax.swing.JMenuItem jmiPartidaNueva;
+    private javax.swing.JMenuItem jmiTransferir;
     // End of variables declaration//GEN-END:variables
 }
