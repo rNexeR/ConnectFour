@@ -39,6 +39,7 @@ public class GameCFour extends JFrame {
     private CircleLabels cl;
     JPanel [][] square;
     private JButton col1, col2, col3, col4, col5, col6, col7;//para agregar circulos a cada columna
+    private JButton pausa, retirar;
     
     private char colorActual = 'R';
     
@@ -74,6 +75,7 @@ public class GameCFour extends JFrame {
     }
     
     public void createBoard(){
+        setPreferredSize(new java.awt.Dimension(600, 700));
         Dimension boardSize = new Dimension(600, 600);
         jlp = new JLayeredPane();
         getContentPane().add(jlp);
@@ -84,7 +86,7 @@ public class GameCFour extends JFrame {
         jlp.add(tablero, JLayeredPane.DEFAULT_LAYER);
         tablero.setLayout( new GridLayout(6, 7));
         tablero.setPreferredSize(boardSize);
-        tablero.setBounds(0, 50, boardSize.width, boardSize.height);
+        tablero.setBounds(0, 70, boardSize.width, boardSize.height);
         
         getContentPane().add(tablero);
         square = new JPanel[CANT_ROW][CANT_COL];
@@ -116,7 +118,7 @@ public class GameCFour extends JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(661, 700));
+        setPreferredSize(new java.awt.Dimension(610, 700));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -174,8 +176,9 @@ public class GameCFour extends JFrame {
             actual = (Partidas)in.readObject();
             fecha = actual.getFecha();
             turno = actual.getTurno();
-//            user1 = actual.getUsuario();
-//            user2 = actual.getAdversario();
+            user1 = GameUsuarios.searchUser(actual.getUsuario());
+            user2 = GameUsuarios.searchUser(actual.getAdversario());
+            colorActual = turno%2==0? 'A' : 'R';
             
         }catch (Exception e){
             System.out.println("Error al cargar Partida");
@@ -241,8 +244,20 @@ public class GameCFour extends JFrame {
             JOptionPane.showMessageDialog(this, "Empate Declarado, han ganado 1 pt cada uno", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
         }else{
             turno++;
-            colorActual = colorActual=='R'?'A':'R';
+            //colorActual = colorActual=='R'?'A':'R';
+            if (colorActual == 'R'){
+                colorActual = 'A';
+                activarOpciones(false);
+            }else{
+                colorActual = 'A';
+                activarOpciones(true);
+            }
         }
+    }
+    
+    private void activarOpciones(boolean x){
+        pausa.setEnabled(x);
+        retirar.setEnabled(x);
     }
     
     private void col1ActionPerformed(ActionEvent evt) {
@@ -286,6 +301,15 @@ public class GameCFour extends JFrame {
         int col = 6;
         validarGameOver(col);
     }
+    
+    private void pausaActionPerformed(ActionEvent evt) {
+        //Aqui el codigo
+        
+    }
+    
+    private void retirarActionPerformed(ActionEvent evt) {
+        //Aqui el codigo
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
@@ -295,7 +319,7 @@ public class GameCFour extends JFrame {
         if (estado == 'T'){
             actual = new Partidas(cant, user1.getUsername(), user2.getUsername(), fecha, 'T', resultado, tipoResultado, turno);
         }else{
-            
+            actual = new Partidas(cant, user1.getUsername(), user2.getUsername(), fecha, 'P', 'V', 'V', turno);
         }
     }
     
@@ -500,13 +524,41 @@ public class GameCFour extends JFrame {
                 col7ActionPerformed(evt);
             }
         });
+        int y = 35;
+        col1.setLocation(0, y);
+        col2.setLocation(85, y);
+        col3.setLocation(170, y);
+        col4.setLocation(255, y);
+        col5.setLocation(340, y);
+        col6.setLocation(425, y);
+        col7.setLocation(510, y);
         
-        col1.setLocation(0, 10);
-        col2.setLocation(85, 10);
-        col3.setLocation(170, 10);
-        col4.setLocation(255, 10);
-        col5.setLocation(340, 10);
-        col6.setLocation(425, 10);
-        col7.setLocation(510, 10);
+        JLabel etiqueta = new JLabel();
+        etiqueta.setText("ConnectFour: " + user1.getUsername() + " vs " + user2.getUsername());
+        etiqueta.setLocation(5, 5);
+        etiqueta.setSize(150, 30);
+        getContentPane().add(etiqueta);
+        
+         pausa = new JButton();
+         pausa.setText("Pausar");
+         pausa.setLocation(425, 5);
+         pausa.setSize(80, 30);
+         pausa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pausaActionPerformed(evt);
+            }
+        });
+         getContentPane().add(pausa);
+         
+         retirar = new JButton();
+         retirar.setText("Retirar");
+         retirar.setLocation(510, 5);
+         retirar.setSize(80, 30);
+         retirar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                retirarActionPerformed(evt);
+            }
+        });
+         getContentPane().add(retirar);
     }
 }
