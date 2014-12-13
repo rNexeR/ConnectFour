@@ -15,9 +15,13 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.RandomAccessFile;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -41,10 +45,12 @@ public class GameCFour extends JFrame {
     private JButton col1, col2, col3, col4, col5, col6, col7;//para agregar circulos a cada columna
     private JButton pausa, retirar;
     
-    private char colorActual = 'R';
+    private char colorActual = 'R', tipoInicio;
+    private Usuarios loggedIn, usuarioActual;
     
     //Variables para la partida
-    Partidas actual;
+    private String partidaCargada;
+    private Partidas actual;
     private int numPartida;
     private Usuarios user1, user2;
     private long fecha;
@@ -59,17 +65,23 @@ public class GameCFour extends JFrame {
      */
     public GameCFour(Usuarios user1, Usuarios user2) {
         initComponents();
+        tipoInicio = 'N';
+        loggedIn = user1;
         this.user1 = user1;
         this.user2 = user2;
         createBoard();
         crearSquares();
+        usuarioActual = user1;
         turno = 1;
         fecha = Calendar.getInstance().getTimeInMillis();
     }
     
-    public GameCFour(String filenamePartida, String filenameCirculos){
+    public GameCFour(Usuarios loggedIn, String filenamePartida, String filenameCirculos){
         initComponents();
+        tipoInicio = 'C';
+        this.loggedIn = loggedIn;
         //Extraer Serializados
+        loadPartida(filenamePartida);
         loadSquares(filenameCirculos);
         
     }
@@ -179,6 +191,10 @@ public class GameCFour extends JFrame {
             user1 = GameUsuarios.searchUser(actual.getUsuario());
             user2 = GameUsuarios.searchUser(actual.getAdversario());
             colorActual = turno%2==0? 'A' : 'R';
+            if (colorActual == 'R')
+                usuarioActual = user1;
+            else
+                usuarioActual = user2;
             
         }catch (Exception e){
             System.out.println("Error al cargar Partida");
@@ -239,17 +255,21 @@ public class GameCFour extends JFrame {
             desactivarConectores();
             String nombre = colorActual=='R'?user1.getNombre():user2.getNombre();
             JOptionPane.showMessageDialog(this, "Ha ganado el jugador " + nombre, "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+            // terminar partida
         }else if (empate()){
             desactivarConectores();
             JOptionPane.showMessageDialog(this, "Empate Declarado, han ganado 1 pt cada uno", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+            //terminarPartida
         }else{
             turno++;
-            //colorActual = colorActual=='R'?'A':'R';
+            colorActual = colorActual=='R'?'A':'R';
             if (colorActual == 'R'){
                 colorActual = 'A';
+                usuarioActual = user2;
                 activarOpciones(false);
             }else{
                 colorActual = 'A';
+                usuarioActual = user1;
                 activarOpciones(true);
             }
         }
@@ -257,7 +277,6 @@ public class GameCFour extends JFrame {
     
     private void activarOpciones(boolean x){
         pausa.setEnabled(x);
-        retirar.setEnabled(x);
     }
     
     private void col1ActionPerformed(ActionEvent evt) {
@@ -304,23 +323,31 @@ public class GameCFour extends JFrame {
     
     private void pausaActionPerformed(ActionEvent evt) {
         //Aqui el codigo
-        
+        terminarPartida('P', 'V', 'V');
     }
     
     private void retirarActionPerformed(ActionEvent evt) {
         //Aqui el codigo
+        terminarPartida('T', 'P', 'R');
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
     private void terminarPartida(char estado, char resultado, char tipoResultado){
-        File usuario = new File("GameFiles"+File.separator+"usuarios"+File.separator+user1.getUsername());
-        int cant = usuario.listFiles().length+1;
+        
+    }
+    
+    private void terminarPartidaNueva(char estado, char resultado, char tipoResultado){
+        int num = GameNumeraciones.getNextNumPartida(loggedIn);
         if (estado == 'T'){
-            actual = new Partidas(cant, user1.getUsername(), user2.getUsername(), fecha, 'T', resultado, tipoResultado, turno);
+            actual = new Partidas(num, user1.getUsername(), user2.getUsername(), fecha, 'T', resultado, tipoResultado, turno);
         }else{
-            actual = new Partidas(cant, user1.getUsername(), user2.getUsername(), fecha, 'P', 'V', 'V', turno);
+            actual = new Partidas(num, user1.getUsername(), user2.getUsername(), fecha, 'P', resultado, tipoResultado, turno);
         }
+    }
+    
+    private void terminarPartidaCargada(char estado, char resultado, char tipoResultado){
+        
     }
     
     private boolean fourConnected(int row, int col, char color){
