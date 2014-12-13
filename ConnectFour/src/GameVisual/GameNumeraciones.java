@@ -23,6 +23,21 @@ public class GameNumeraciones {
             RandomAccessFile m = new RandomAccessFile(n, "rw");
             m.seek(0);
             num = m.readInt();
+            m.close();
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return num;
+    }
+    
+    public static int getNextNumTablero(Usuarios loggedIn){
+        File n = new File("GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername() + File.separator + "tableros" + File.separator + "numeracion.num");
+        int num = -1;
+        try {
+            RandomAccessFile m = new RandomAccessFile(n, "rw");
+            m.seek(0);
+            num = m.readInt();
+            m.close();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }

@@ -16,8 +16,10 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.Calendar;
 import java.util.logging.Level;
@@ -50,6 +52,7 @@ public class GameCFour extends JFrame {
     
     //Variables para la partida
     private String partidaCargada;
+    private String tableroCargado;
     private Partidas actual;
     private int numPartida;
     private Usuarios user1, user2;
@@ -79,6 +82,8 @@ public class GameCFour extends JFrame {
     public GameCFour(Usuarios loggedIn, String filenamePartida, String filenameCirculos){
         initComponents();
         tipoInicio = 'C';
+        partidaCargada = filenamePartida;
+        tableroCargado = filenameCirculos;
         this.loggedIn = loggedIn;
         //Extraer Serializados
         loadPartida(filenamePartida);
@@ -334,20 +339,71 @@ public class GameCFour extends JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void terminarPartida(char estado, char resultado, char tipoResultado){
-        
+        if (tipoInicio == 'N'){
+            System.out.println("Guardando nueva partida, estado: " + estado);
+            terminarPartidaNueva(estado, resultado, tipoResultado);
+        }else{
+            if (resultado == 'E'){
+                System.out.println("Guardando nueva partida, estado: " + estado + " resultado: Empate");
+                terminarPartidaCargada(estado, 'E', tipoResultado);
+            }else if (resultado != 'P'){
+                if (usuarioActual == loggedIn){
+                    System.out.println("Guardando nueva partida, estado: " + estado + " resultado: Ganada");
+                    terminarPartidaCargada(estado, 'G', tipoResultado);
+                }else{
+                    System.out.println("Guardando nueva partida, estado: " + estado + " resultado: Perdida");
+                    terminarPartidaCargada(estado, 'P', tipoResultado);
+                }
+            }else{
+                System.out.println("Guardando nueva partida, estado: " + estado + " resultado: Pendiente");
+                
+            }
+        }
     }
     
     private void terminarPartidaNueva(char estado, char resultado, char tipoResultado){
         int num = GameNumeraciones.getNextNumPartida(loggedIn);
-        if (estado == 'T'){
-            actual = new Partidas(num, user1.getUsername(), user2.getUsername(), fecha, 'T', resultado, tipoResultado, turno);
-        }else{
-            actual = new Partidas(num, user1.getUsername(), user2.getUsername(), fecha, 'P', resultado, tipoResultado, turno);
+        actual = new Partidas(num, user1.getUsername(), user2.getUsername(), fecha, 'T', resultado, tipoResultado, turno);
+        //Serializar tablero y Archivo binario
+    }
+    
+    private int getNumeroPartida(String filename){
+        File n = new File(filename);
+        int num = -1;
+        try {
+            RandomAccessFile m = new RandomAccessFile(n, "rw");
+            num = m.readInt();
+            m.close();
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
         }
+        return num;
     }
     
     private void terminarPartidaCargada(char estado, char resultado, char tipoResultado){
-        
+        int num = getNumeroPartida(partidaCargada);
+        File partida = new File(partidaCargada);
+        partida.delete();
+        try {
+            RandomAccessFile m = new RandomAccessFile(partida, "rw");
+            m.writeInt(num);
+            m.writeUTF(user1.getUsername());
+            m.writeUTF(user2.getUsername());
+            m.writeLong(fecha);
+            m.writeChar(estado);
+            m.writeChar(resultado);
+            m.writeChar(tipoResultado);
+            
+            FileOutputStream fileOut = new FileOutputStream(tableroCargado);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(square);
+            
+            out.close();
+            fileOut.close();
+            m.close();
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
     
     private boolean fourConnected(int row, int col, char color){
