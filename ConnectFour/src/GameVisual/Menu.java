@@ -5,6 +5,8 @@
  */
 package GameVisual;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Raim
@@ -65,12 +67,27 @@ public class Menu extends javax.swing.JFrame {
         jMenu1.add(jmiPartidaNueva);
 
         jmiCargar.setText("Cargar Partida");
+        jmiCargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiCargarActionPerformed(evt);
+            }
+        });
         jMenu1.add(jmiCargar);
 
         jmiEliminarPartida.setText("Eliminar Partida");
+        jmiEliminarPartida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiEliminarPartidaActionPerformed(evt);
+            }
+        });
         jMenu1.add(jmiEliminarPartida);
 
         jmiTransferir.setText("Transferir Partida");
+        jmiTransferir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiTransferirActionPerformed(evt);
+            }
+        });
         jMenu1.add(jmiTransferir);
 
         jMenuBar1.add(jMenu1);
@@ -78,9 +95,19 @@ public class Menu extends javax.swing.JFrame {
         jMenu2.setText("Reportes");
 
         jMenuItem5.setText("Mis Ultimos Juegos");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem5);
 
         jMenuItem6.setText("Ranking");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem6);
 
         jMenuBar1.add(jMenu2);
@@ -88,11 +115,21 @@ public class Menu extends javax.swing.JFrame {
         jMenu3.setText("Mi Perfil");
 
         jMenuItem7.setText("Eliminar Cuenta");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem7);
 
         jMenuBar1.add(jMenu3);
 
         jMenu4.setText("Cerrar Sesión");
+        jMenu4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu4ActionPerformed(evt);
+            }
+        });
         jMenuBar1.add(jMenu4);
 
         setJMenuBar(jMenuBar1);
@@ -123,6 +160,57 @@ public class Menu extends javax.swing.JFrame {
         jDMenus.add(pn);
         pn.show();
     }//GEN-LAST:event_jmiPartidaNuevaActionPerformed
+
+    private void jmiCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiCargarActionPerformed
+        // TODO add your handling code here:
+        CargarPartida cp = new CargarPartida();
+        jDMenus.add(cp);
+        cp.show();
+    }//GEN-LAST:event_jmiCargarActionPerformed
+
+    private void jmiEliminarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiEliminarPartidaActionPerformed
+        // TODO add your handling code here:
+        EliminarPartida ep = new EliminarPartida();
+        jDMenus.add(ep);
+        ep.show();
+    }//GEN-LAST:event_jmiEliminarPartidaActionPerformed
+
+    private void jmiTransferirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiTransferirActionPerformed
+        // TODO add your handling code here:
+        EliminarPartida cp = new EliminarPartida();
+        jDMenus.add(cp);
+        cp.show();
+    }//GEN-LAST:event_jmiTransferirActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+        LogJuegos cp = new LogJuegos();
+        jDMenus.add(cp);
+        cp.show();
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        // TODO add your handling code here:
+        Ranking cp = new Ranking();
+        jDMenus.add(cp);
+        cp.show();
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        // TODO add your handling code here:
+        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente eliminar su Usuario?",
+                "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+            //EliminarUsuario
+        }
+        
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
+        // TODO add your handling code here:
+        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente salir del sistema?",
+                "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION)
+            dispose();
+    }//GEN-LAST:event_jMenu4ActionPerformed
 
     /**
      * @param args the command line arguments
