@@ -33,9 +33,6 @@ public class MainConnectFour extends javax.swing.JFrame {
    private JPasswordField txtpass;
    private char op;
    private int x = 125, y = 0;
-   
-   private ArrayList<Usuarios> users;
-   private RandomAccessFile rUsers;
     
     /**
      * Creates new form MainConnectFour
@@ -43,92 +40,9 @@ public class MainConnectFour extends javax.swing.JFrame {
     public MainConnectFour() {
         initComponents();
         ImageIcon icono = new ImageIcon("icono.png"); 
-        this.setIconImage(icono.getImage()); 
-        users = new ArrayList<>();
-        loadUsers();
+        this.setIconImage(icono.getImage());
+        GameUsuarios.loadUsers();
         createOptions();
-    }
-    
-    private void loadUsers(){
-        //Verificar que la carpeta exista
-        File user = new File("GameFiles");
-        if (!user.exists()){
-            user = new File("GameFiles"+File.separator+"usuarios");
-            user.mkdirs();
-        }
-            
-        
-        user = new File("GameFiles" + File.separator + "usuarios.cfo");
-       
-        int cod, ppendientes, pterminadas, puntos;
-        String nombre, username, password;
-        long fecha;
-        
-        if (user.exists()){
-            try {
-                //Cargar Usuarios
-                 try {
-                     rUsers = new RandomAccessFile(user, "rw");
-                 } catch (FileNotFoundException ex) {
-                     System.out.println("Archivo no encontrado");
-                 }
-                while(rUsers.getFilePointer() < rUsers.length()){
-                    username = rUsers.readUTF();
-                    password = rUsers.readUTF();
-                    nombre = rUsers.readUTF();
-                    fecha = rUsers.readLong();
-                    pterminadas = rUsers.readInt();
-                    ppendientes = rUsers.readInt();
-                    puntos = rUsers.readInt();
-                    users.add(new Usuarios(pterminadas, ppendientes, puntos, nombre, username, password, fecha));
-                }
-                rUsers.close();
-            } catch (IOException ex) {
-                System.out.println("Usuarios.cfo: Error al cargar");
-            }
-        }else{
-             try {
-                 user.createNewFile();
-             } catch (IOException ex) {
-                 System.out.println("Usuarios.cfo: Error al crear");
-             }
-        }
-       
-    }
-    
-    public void saveUsers(){
-        System.out.println("Guardando Usuarios");
-        File user = new File("GameFiles"+File.separator+"usuarios.cfo");
-        user.delete();
-        
-        try {
-            user.createNewFile();
-            rUsers = new RandomAccessFile(user, "rw");
-        
-            rUsers.seek(0);
-            for (Usuarios x : users){
-                rUsers.writeUTF(x.getUsername());
-                rUsers.writeUTF(x.getPassword());
-                rUsers.writeUTF(x.getNombre());
-                rUsers.writeLong(x.getFechaNac());
-                rUsers.writeInt(x.getPterminadas());
-                rUsers.writeInt(x.getPpendientes());
-                rUsers.writeInt(x.getPuntos());
-            }
-            System.out.println("Usuarios guardados");
-            rUsers.close();
-       } catch (IOException ex) {
-           System.out.println("Error al guardar Usuarios");
-       }
-        
-    }
-    
-    public boolean deleteUser(String username){
-        for (Usuarios x : users){
-            if (x.getUsername().equals(username))
-                return users.remove(x);
-        }
-        return false;
     }
     
     private void createOptions(){
@@ -183,14 +97,6 @@ public class MainConnectFour extends javax.swing.JFrame {
         btncancelar.setSize(100, 30);
     }
     
-    private Usuarios searchUser(String user){
-        for (Usuarios x : users){
-            if (x.getUsername().equalsIgnoreCase(user))
-                return x;
-        }
-        return null;
-    }
-    
     private void close(){
         if (JOptionPane .showConfirmDialog(this, "¿Desea realmente salir del sistema?",
                 "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION)
@@ -200,9 +106,9 @@ public class MainConnectFour extends javax.swing.JFrame {
     private void btnaceptarActionPerformed(ActionEvent evt) {
         //Aqui el Codigo
         if (op == 'L'){
-            if (users.size() > 0){
+            if (GameUsuarios.users.size() > 0){
                 String user1 = txtuser.getText();
-                Usuarios buscar = searchUser(user1);
+                Usuarios buscar = GameUsuarios.searchUser(user1);
                 if (buscar != null){
                     String passwd = new String(txtpass.getPassword());
                     if (buscar.getPassword().equals(passwd)){
@@ -220,7 +126,7 @@ public class MainConnectFour extends javax.swing.JFrame {
         }else{
             //addUser
             String usern = txtuser.getText();
-            Usuarios buscar = searchUser(usern);
+            Usuarios buscar = GameUsuarios.searchUser(usern);
             if (buscar != null){
                 JOptionPane.showMessageDialog(this, "Usuario ya Existe", "Informacion", JOptionPane.INFORMATION_MESSAGE);
                 exitAddUser();
@@ -229,9 +135,9 @@ public class MainConnectFour extends javax.swing.JFrame {
                 String pass = new String(txtpass.getPassword());
                 String name = txtnombre.getText();
                 long fec = getTime(txtfecha.getText());
-                users.add(new Usuarios(name, usern, pass, fec));
+                GameUsuarios.users.add(new Usuarios(name, usern, pass, fec));
                 System.out.println("Usuario Creado");
-                saveUsers();
+                GameUsuarios.saveUsers();
                 File user = new File("GameFiles"+File.separator+"usuarios"+File.separator+name);
                 user.mkdirs();
                 JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
