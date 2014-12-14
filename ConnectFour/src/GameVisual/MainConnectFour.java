@@ -161,10 +161,12 @@ public class MainConnectFour extends javax.swing.JFrame {
                 System.out.println("Usuario Creado");
                 GameUsuarios.saveUsers();
                     
-                File userFile = new File("GameFiles"+File.separator+"usuarios"+File.separator+name+File.separator+"tableros");
+                File userFile = new File("GameFiles" + File.separator
+                        + "usuarios" + File.separator + name+File.separator + "tableros");
                 userFile.mkdirs();
                 crearNumeraciones(usern);
-                JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", 
+                        "Informacion", JOptionPane.INFORMATION_MESSAGE);
                 exitAddUser();                
             }catch(NullPointerException ex){
                 JOptionPane.showMessageDialog(this, "Llene todos los campos con el formato requerido, de tenerlo",                            
@@ -180,6 +182,10 @@ public class MainConnectFour extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Crea el archivo de numeraciones para el usuario
+     * @param name Username del jugador
+     */
     private void crearNumeraciones(String name){
         try {
             String dirUsers = "GameFiles" + File.separator + "usuarios"
