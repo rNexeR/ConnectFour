@@ -54,7 +54,7 @@ public class Menu extends javax.swing.JFrame {
         jDMenus.setLayout(jDMenusLayout);
         jDMenusLayout.setHorizontalGroup(
             jDMenusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 656, Short.MAX_VALUE)
+            .addGap(0, 715, Short.MAX_VALUE)
         );
         jDMenusLayout.setVerticalGroup(
             jDMenusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
