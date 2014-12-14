@@ -174,14 +174,15 @@ public class GameCFour extends JFrame {
         try{
             FileInputStream fileIn = new FileInputStream(filename);
             ObjectInputStream in = new ObjectInputStream(fileIn);
+            System.out.print(filename);
             square = (JPanel[][])in.readObject();
-            for (int i = 0; i < CANT_ROW; i++) {
-                for(int j = 0; j < CANT_COL; j++){
-                    tablero.add(square [i][j]);
-                }
+            System.out.print(square[0][0].toString());
+            for (JPanel x[]: square) {
+                for (JPanel y: x)
+                    tablero.add(y);
             }
         }catch (Exception e){
-            System.out.println("Error al cargar Partida");
+            System.out.println("Square: "+e.getMessage());
         }
     }
     
@@ -204,7 +205,7 @@ public class GameCFour extends JFrame {
                 usuarioActual = user2;
             
         }catch (Exception e){
-            System.out.println("Error al cargar Partida");
+            System.out.println("Datos: "+e.getMessage());
         }
     }
     
