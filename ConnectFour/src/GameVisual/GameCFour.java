@@ -81,12 +81,13 @@ public class GameCFour extends JFrame {
     
     public GameCFour(Usuarios loggedIn, String filenamePartida, String filenameCirculos){
         initComponents();
+        loadPartida(filenamePartida);
+        createBoard();
         tipoInicio = 'C';
         partidaCargada = filenamePartida;
         tableroCargado = filenameCirculos;
         this.loggedIn = loggedIn;
         //Extraer Serializados
-        loadPartida(filenamePartida);
         loadSquares(filenameCirculos);
         
     }
@@ -171,16 +172,20 @@ public class GameCFour extends JFrame {
     }
     
     void loadSquares(String filename){
+        crearSquares();
         try{
             FileInputStream fileIn = new FileInputStream(filename);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             System.out.print(filename);
-            square = (JPanel[][])in.readObject();
-            System.out.print(square[0][0].toString());
-            for (JPanel x[]: square) {
-                for (JPanel y: x)
-                    tablero.add(y);
+            char[][] colores = ((char[][])in.readObject());
+            char color;
+            
+            for (int i = 0; i < CANT_ROW; i++) {
+            for(int j = 0; j < CANT_COL; j++){
+                color = colores[i][j];
+                ((CircleLabels)square[i][j].getComponent(0)).setColorIcon(color);
             }
+        }
         }catch (Exception e){
             System.out.println("Square: "+e.getMessage());
         }
@@ -401,12 +406,26 @@ public class GameCFour extends JFrame {
             String dir = "GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername() + File.separator + "tableros" + File.separator + numT +".ser";
             FileOutputStream fileOut = new FileOutputStream(dir);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(square);
+            
+            char[][] circulos = guardarSquares();
+            
+            
+            out.writeObject(circulos);
             out.close();
             fileOut.close();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+    
+    private char[][] guardarSquares(){
+        char[][] circulos = new char[CANT_ROW][CANT_COL];
+        for (int i = 0; i < CANT_ROW; i++) {
+            for(int j = 0; j < CANT_COL; j++){
+                circulos[i][j] = ((CircleLabels)square[i][j].getComponent(0)).color;
+            }
+        }
+        return circulos;
     }
     
     private int getNumeroPartida(String filename){
@@ -439,7 +458,9 @@ public class GameCFour extends JFrame {
             
             FileOutputStream fileOut = new FileOutputStream(tableroCargado);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(square);
+            char[][] circulos = guardarSquares();
+            
+            out.writeObject(circulos);
             
             out.close();
             fileOut.close();

@@ -146,6 +146,7 @@ public class CargarPartida extends javax.swing.JInternalFrame {
         }catch (Exception ex){                           
             JOptionPane.showMessageDialog(this, "Error", "Error buscando archivos", 
                     JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
 
         }
         
