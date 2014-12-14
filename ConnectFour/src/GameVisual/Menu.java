@@ -192,7 +192,7 @@ public class Menu extends javax.swing.JFrame {
 
     private void jmiTransferirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiTransferirActionPerformed
         // TODO add your handling code here:
-        TransferirPartida cp = new TransferirPartida();
+        TransferirPartida cp = new TransferirPartida(loggedUser);
         jDMenus.add(cp);
         cp.show();
     }//GEN-LAST:event_jmiTransferirActionPerformed
