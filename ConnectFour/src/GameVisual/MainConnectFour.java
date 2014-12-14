@@ -50,6 +50,7 @@ public class MainConnectFour extends javax.swing.JFrame {
         login.setText("Iniciar Sesion");
         getContentPane().add(login);
         login.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginActionPerformed(evt);
             }
@@ -59,6 +60,7 @@ public class MainConnectFour extends javax.swing.JFrame {
         addUser.setText("Crear Usuario");
         getContentPane().add(addUser);
         addUser.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addUserActionPerformed(evt);
             }
@@ -68,6 +70,7 @@ public class MainConnectFour extends javax.swing.JFrame {
         salir.setText("Salir");
         getContentPane().add(salir);
         salir.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 salirActionPerformed(evt);
             }
@@ -76,6 +79,7 @@ public class MainConnectFour extends javax.swing.JFrame {
         btnaceptar = new JButton();
         btnaceptar.setText("Aceptar");
         btnaceptar.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnaceptarActionPerformed(evt);
             }
@@ -84,6 +88,7 @@ public class MainConnectFour extends javax.swing.JFrame {
         btncancelar = new JButton();
         btncancelar.setText("Cancelar");
         btncancelar.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btncancelarActionPerformed(evt);
             }
