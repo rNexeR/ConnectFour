@@ -6,17 +6,23 @@
 
 package GameVisual;
 
+import Librerias.Usuarios;
+import java.io.File;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author KELVIN
  */
 public class EliminarPartida extends javax.swing.JInternalFrame {
-
+    Usuarios currentUser;
     /**
      * Creates new form EliminarPartida
      */
-    public EliminarPartida() {
+    public EliminarPartida(Usuarios currentUser) {
+        this.currentUser = currentUser;
         initComponents();
+        loadPartidas();
     }
 
     /**
@@ -35,8 +41,6 @@ public class EliminarPartida extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Seleccione Partida:");
 
-        JCPartidas.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         btnaceptar.setText("Eliminar");
         btnaceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -45,6 +49,11 @@ public class EliminarPartida extends javax.swing.JInternalFrame {
         });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -79,10 +88,38 @@ public class EliminarPartida extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    private void loadPartidas(){
+        JCPartidas.removeAllItems();
+        File directorio = new File("GameFiles/usuarios/"+currentUser.getUsername());
+        File dirs[] = directorio.listFiles();
+        for (File x: dirs){
+            if (x.isDirectory() || x.getName().equals("numeracion.num"))
+                continue;
+            JCPartidas.addItem(x.getName());
+        }
+    }
+    
     private void btnaceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarActionPerformed
         // TODO add your handling code here:
+        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente eliminar esta partida?",
+                "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+            String archivo = JCPartidas.getSelectedItem().toString();
+            if (archivo != null){
+                File partida = new File("GameFiles/usuarios/"+currentUser.getUsername()+"/"+archivo);
+                partida.delete();
+                loadPartidas();
+                JOptionPane.showMessageDialog(this, "Partida Eliminada", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        
+        
     }//GEN-LAST:event_btnaceptarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

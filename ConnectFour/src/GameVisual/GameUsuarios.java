@@ -76,10 +76,10 @@ public class GameUsuarios {
         
     }
     
-    public static boolean deleteUser(String username){
-        for (Usuarios x : users){
-            if (x.getUsername().equals(username))
-                return users.remove(x);
+    public static boolean deleteUser(Usuarios user){
+        if (users.remove(user)){
+            saveUsers();
+            return true;
         }
         return false;
     }

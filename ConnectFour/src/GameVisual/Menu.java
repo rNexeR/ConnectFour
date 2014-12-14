@@ -185,14 +185,14 @@ public class Menu extends javax.swing.JFrame {
 
     private void jmiEliminarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiEliminarPartidaActionPerformed
         // TODO add your handling code here:
-        EliminarPartida ep = new EliminarPartida();
+        EliminarPartida ep = new EliminarPartida(loggedUser);
         jDMenus.add(ep);
         ep.show();
     }//GEN-LAST:event_jmiEliminarPartidaActionPerformed
 
     private void jmiTransferirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiTransferirActionPerformed
         // TODO add your handling code here:
-        EliminarPartida cp = new EliminarPartida();
+        TransferirPartida cp = new TransferirPartida();
         jDMenus.add(cp);
         cp.show();
     }//GEN-LAST:event_jmiTransferirActionPerformed
@@ -215,23 +215,27 @@ public class Menu extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (JOptionPane .showConfirmDialog(this, "¿Desea realmente eliminar su Usuario?",
                 "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
-            //EliminarUsuario
+            System.out.println(loggedUser.getUsername());
+            GameUsuarios.deleteUser(loggedUser);
+            loggedUser = null;
+            new MainConnectFour().setVisible(true);
+            dispose();
         }
         
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuCerrarSesionActionPerformed
         // TODO add your handling code here:
-        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente salir del sistema?",
-                "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION)
-            dispose();
     }//GEN-LAST:event_jMenuCerrarSesionActionPerformed
 
     private void jMCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMCerrarSesionActionPerformed
         // TODO add your handling code here:
-        loggedUser = null;
-        new MainConnectFour().setVisible(true);
-        dispose();
+        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente salir del sistema?",
+                "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+            loggedUser = null;
+            new MainConnectFour().setVisible(true);
+            dispose();
+        }
     }//GEN-LAST:event_jMCerrarSesionActionPerformed
 
     /**
