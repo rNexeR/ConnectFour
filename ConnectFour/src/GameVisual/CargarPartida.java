@@ -51,9 +51,9 @@ public class CargarPartida extends javax.swing.JInternalFrame {
                     int numPartida = rPartida.readInt();
                     String userActual = rPartida.readUTF();
                     String adversario = rPartida.readUTF();
-                    Date fecha = new Date(rPartida.readLong());
-                    rPartida.skipBytes(4);
+                    Date fecha = new Date(rPartida.readLong());                    
                     char estado = rPartida.readChar();
+                    rPartida.skipBytes(4);
                     int turno = rPartida.readInt();
                     
                     rPartida.close();
