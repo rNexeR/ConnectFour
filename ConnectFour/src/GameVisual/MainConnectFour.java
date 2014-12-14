@@ -154,8 +154,15 @@ public class MainConnectFour extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
                     exitAddUser();
                 }catch(NullPointerException ex){
-                    JOptionPane.showMessageDialog(this, "Llene todos los campos con el formato requerido, de tenerlo", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Llene todos los campos con el formato requerido, de tenerlo", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
                     System.out.println("Campos Vacios");
+                }catch(NumberFormatException ex){
+                    JOptionPane.showMessageDialog(this, "Llene todos los campos con el formato requerido, de tenerlo", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }catch (Exception ex){
+                    JOptionPane.showMessageDialog(this, "Revise sus datos de ingreso.", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 
             }

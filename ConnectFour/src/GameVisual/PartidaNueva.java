@@ -24,7 +24,7 @@ public class PartidaNueva extends javax.swing.JInternalFrame {
         for(Usuarios u : GameUsuarios.users){
             System.out.println(u.getNombre());
             if(u != currentUser)
-                jCUsuarios.addItem(u.getNombre());
+                jCUsuarios.addItem(u.getUsername());
         }
     }
 
