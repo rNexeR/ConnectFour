@@ -354,11 +354,23 @@ public class GameCFour extends JFrame {
     private void retirarActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         if (JOptionPane .showConfirmDialog(this, "¿Desea realmente retirarse de la partida?", "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
-            if (loggedIn == usuarioActual)
-                terminarPartida('T', 'P', 'R');
-            else
-                terminarPartida('T', 'G', 'R');
-            JOptionPane.showMessageDialog(this, "Partida pausada exitosamente, puede reanudarla desde el menu principal", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+            if (loggedIn == usuarioActual){
+                if (user1 == loggedIn){
+                    JOptionPane.showMessageDialog(this, "Jugador "+user1.getNombre()+" se retira, " + user2.getNombre()+" ha ganado", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+                    user2.addWinPoints();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Jugador "+user2.getNombre()+" se retira, " + user1.getNombre()+" ha ganado", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+                    user1.addWinPoints();
+                }
+            }else{
+                if (user1 != loggedIn){
+                    JOptionPane.showMessageDialog(this, "Jugador "+user1.getNombre()+" se retira, " + user2.getNombre()+" ha ganado", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+                    user2.addWinPoints();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Jugador "+user2.getNombre()+" se retira, " + user1.getNombre()+" ha ganado", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+                    user1.addWinPoints();
+                }
+            }
             dispose();
         }
         
