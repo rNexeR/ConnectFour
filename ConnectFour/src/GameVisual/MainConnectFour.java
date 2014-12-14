@@ -171,19 +171,19 @@ public class MainConnectFour extends javax.swing.JFrame {
     
     private void crearNumeraciones(String name){
         try {
-            File user = new File("GameFiles"+File.separator+"usuarios"+File.separator+name+File.separator+"tableros"+File.separator+"numeracion.num");
-            if (!user.exists()){
-                user.createNewFile();
-                RandomAccessFile u = new RandomAccessFile(user, "rw");
-                u.writeInt(1);
-            }
+            String dirUsers = "GameFiles" + File.separator + "usuarios"
+                    + File.separator + name;
+            File user = new File(dirUsers + File.separator + "tableros");
+            user.mkdirs();
+            //Archivo numeración en la carpeta de tableros
+            RandomAccessFile u = new RandomAccessFile(dirUsers + File.separator + "tableros" 
+                    + File.separator + "numeracion.num", "rw");              
+            u.writeInt(1);           
             
-            user = new File("GameFiles"+File.separator+"usuarios"+File.separator+name+File.separator+"numeracion.num");
-            if (!user.exists()){
-                user.createNewFile();
-                RandomAccessFile u = new RandomAccessFile(user, "rw");
-                u.writeInt(1);
-            }
+            //Archivo numeración en la carpeta del usuario
+            user = new File(dirUsers + File.separator + "numeracion.num");                          
+            RandomAccessFile numSing = new RandomAccessFile(user, "rw");              
+            numSing.writeInt(1);            
         } catch (IOException ex) {
             System.out.println("Error al crear directorios de Usuario");
         }
