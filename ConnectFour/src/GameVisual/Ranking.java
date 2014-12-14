@@ -6,17 +6,62 @@
 
 package GameVisual;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import Librerias.Usuarios;
+
 /**
  *
- * @author KELVIN
+ * @author Raim
  */
 public class Ranking extends javax.swing.JInternalFrame {
-
+    private RandomAccessFile rUsuarios;
+    private ArrayList<Usuarios> listUsuarios;
+    
     /**
      * Creates new form Ranking
      */
     public Ranking() {
         initComponents();
+        try{
+            rUsuarios = new RandomAccessFile("GameFiles" + File.separator 
+                    + "usuarios.cfo", "r");
+            listUsuarios = new ArrayList<>();  
+            //Agregar usuarios a la lista y luego ordenarlos
+            addUsersToList();
+            sortListUsuarios();
+        }catch(IOException io){
+            System.out.println(io.getMessage());
+        }
+    }
+    
+    private void addUsersToList() throws IOException{
+        listUsuarios.clear();
+        rUsuarios.seek(0);
+        while(rUsuarios.getFilePointer() < rUsuarios.length()){
+            String username = rUsuarios.readUTF();
+            rUsuarios.readUTF();
+            String nombre = rUsuarios.readUTF();
+            rUsuarios.readLong();
+            rUsuarios.skipBytes(8);
+            int puntos = rUsuarios.readInt();
+            //Agregar solo los datos necesarios para el ranking
+            listUsuarios.add(new Usuarios(0, 0, puntos, nombre, username, "", 0));            
+        }    
+               
+    }
+    
+    private void sortListUsuarios(){
+        ArrayList<Usuarios> tmpUsers = new ArrayList<>();
+        Usuarios userPlaceholder;
+        while (listUsuarios.size() > 0){
+            for (int i = 0; i < listUsuarios.size() - 1; i++){
+                userPlaceholder = listUsuarios.get(0);
+                //userPlaceholder = Math.max(userPlaceholder.getPuntos(), list)
+            }
+        }
     }
 
     /**
