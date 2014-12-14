@@ -53,7 +53,7 @@ public class GameCFour extends JFrame {
     //Variables para la partida
     private String partidaCargada;
     private String tableroCargado;
-    private Partidas actual;
+    //private Partidas actual;
     private int numPartida;
     private Usuarios user1, user2;
     private long fecha;
@@ -187,14 +187,16 @@ public class GameCFour extends JFrame {
     
     void loadPartida(String filename){
         try{
-            FileInputStream fileIn = new FileInputStream(filename);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
+            RandomAccessFile par = new RandomAccessFile(filename, "rw");
+            numPartida = par.readInt();
+            user1 = GameUsuarios.searchUser(par.readUTF());
+            user2 = GameUsuarios.searchUser(par.readUTF());
+            fecha = par.readLong();
+            estadoPartida = par.readChar();
+            resultadoPartida = par.readChar();
+            tipoResultado = par.readChar();
+            turno = par.readInt();
             
-            actual = (Partidas)in.readObject();
-            fecha = actual.getFecha();
-            turno = actual.getTurno();
-            user1 = GameUsuarios.searchUser(actual.getUsuario());
-            user2 = GameUsuarios.searchUser(actual.getAdversario());
             colorActual = turno%2==0? 'A' : 'R';
             if (colorActual == 'R')
                 usuarioActual = user1;
@@ -380,7 +382,7 @@ public class GameCFour extends JFrame {
     private void terminarPartidaNueva(char estado, char resultado, char tipoResultado){
         int numP = GameNumeraciones.getNextNumPartida(loggedIn);
         int numT = GameNumeraciones.getNextNumTablero(loggedIn);
-        actual = new Partidas(numP, user1.getUsername(), user2.getUsername(), fecha, 'T', resultado, tipoResultado, turno);
+        //actual = new Partidas(numP, user1.getUsername(), user2.getUsername(), fecha, 'T', resultado, tipoResultado, turno);
         
         File n = new File("GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername() + File.separator + "partida#"+ numP + ".par");
         try {
@@ -392,6 +394,7 @@ public class GameCFour extends JFrame {
             m.writeChar(estado);
             m.writeChar(resultado);
             m.writeChar(tipoResultado);
+            m.writeInt(turno);
             m.close();
             
             String dir = "GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername() + File.separator + "tableros" + File.separator + numT +".ser";
@@ -431,6 +434,7 @@ public class GameCFour extends JFrame {
             m.writeChar(estado);
             m.writeChar(resultado);
             m.writeChar(tipoResultado);
+            m.writeInt(turno);
             
             FileOutputStream fileOut = new FileOutputStream(tableroCargado);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);

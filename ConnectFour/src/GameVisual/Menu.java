@@ -185,14 +185,14 @@ public class Menu extends javax.swing.JFrame {
 
     private void jmiEliminarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiEliminarPartidaActionPerformed
         // TODO add your handling code here:
-        EliminarPartida ep = new EliminarPartida();
+        EliminarPartida ep = new EliminarPartida(loggedUser);
         jDMenus.add(ep);
         ep.show();
     }//GEN-LAST:event_jmiEliminarPartidaActionPerformed
 
     private void jmiTransferirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiTransferirActionPerformed
         // TODO add your handling code here:
-        EliminarPartida cp = new EliminarPartida();
+        TransferirPartida cp = new TransferirPartida();
         jDMenus.add(cp);
         cp.show();
     }//GEN-LAST:event_jmiTransferirActionPerformed
