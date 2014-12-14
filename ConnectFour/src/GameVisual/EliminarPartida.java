@@ -76,7 +76,7 @@ public class EliminarPartida extends javax.swing.JInternalFrame {
                         .addComponent(btnaceptar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancelar)
-                        .addGap(0, 330, Short.MAX_VALUE)))
+                        .addGap(0, 420, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
