@@ -123,7 +123,7 @@ public class MainConnectFour extends javax.swing.JFrame {
                         //Llamar Formulario de ConnectFour
                         exitLogin();
                         new Menu(buscar).setVisible(true);
-                        this.setVisible(false);
+                        this.dispose();
                     }else
                         JOptionPane.showMessageDialog(this, "Usuario y Contraseña no coinciden", "Error al Inicar Sesion", JOptionPane.INFORMATION_MESSAGE);
                 }else

@@ -45,7 +45,8 @@ public class Menu extends javax.swing.JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem7 = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
+        jMenuCerrarSesion = new javax.swing.JMenu();
+        jMCerrarSesion = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -128,13 +129,23 @@ public class Menu extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu3);
 
-        jMenu4.setText("Cerrar Sesión");
-        jMenu4.addActionListener(new java.awt.event.ActionListener() {
+        jMenuCerrarSesion.setText("Cerrar Sesión");
+        jMenuCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu4ActionPerformed(evt);
+                jMenuCerrarSesionActionPerformed(evt);
             }
         });
-        jMenuBar1.add(jMenu4);
+
+        jMCerrarSesion.setText("Cerrar Sesión");
+        jMCerrarSesion.setToolTipText("");
+        jMCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMCerrarSesionActionPerformed(evt);
+            }
+        });
+        jMenuCerrarSesion.add(jMCerrarSesion);
+
+        jMenuBar1.add(jMenuCerrarSesion);
 
         setJMenuBar(jMenuBar1);
 
@@ -209,12 +220,19 @@ public class Menu extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
-    private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
+    private void jMenuCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuCerrarSesionActionPerformed
         // TODO add your handling code here:
         if (JOptionPane .showConfirmDialog(this, "¿Desea realmente salir del sistema?",
                 "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION)
             dispose();
-    }//GEN-LAST:event_jMenu4ActionPerformed
+    }//GEN-LAST:event_jMenuCerrarSesionActionPerformed
+
+    private void jMCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMCerrarSesionActionPerformed
+        // TODO add your handling code here:
+        loggedUser = null;
+        new MainConnectFour().setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jMCerrarSesionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -253,11 +271,12 @@ public class Menu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDMenus;
+    private javax.swing.JMenuItem jMCerrarSesion;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu jMenuCerrarSesion;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
