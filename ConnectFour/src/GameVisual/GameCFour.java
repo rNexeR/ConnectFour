@@ -564,6 +564,8 @@ public class GameCFour extends JFrame {
         col5.setEnabled(false);
         col6.setEnabled(false);
         col7.setEnabled(false);
+        pausa.setEnabled(false);
+        retirar.setEnabled(false);
     }
     
     private void addButtons() {
@@ -651,7 +653,7 @@ public class GameCFour extends JFrame {
         JLabel etiqueta = new JLabel();
         etiqueta.setText("ConnectFour: " + user1.getUsername() + " vs " + user2.getUsername());
         etiqueta.setLocation(5, 5);
-        etiqueta.setSize(150, 30);
+        etiqueta.setSize(250, 30);
         getContentPane().add(etiqueta);
         
          pausa = new JButton();
