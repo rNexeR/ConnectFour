@@ -52,11 +52,13 @@ public class CargarPartida extends javax.swing.JInternalFrame {
                     String userActual = rPartida.readUTF();
                     String adversario = rPartida.readUTF();
                     Date fecha = new Date(rPartida.readLong());
+                    rPartida.skipBytes(6);
+                    int turno = rPartida.readInt();
                     
                     rPartida.close();
                     Formatter formato = new Formatter();
-                    formato.format("%d - %s VS %s - Iniciado en: %tc", numPartida, userActual, adversario 
-                            , fecha);
+                    formato.format("%d - %s VS %s - Iniciado en: %tc - Turno %d", numPartida, userActual, adversario 
+                            , fecha, turno);
                     JCPartidas.addItem(formato.toString());                    
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(rootPane, "Error",
@@ -113,7 +115,7 @@ public class CargarPartida extends javax.swing.JInternalFrame {
                         .addComponent(btnaceptar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancelar)
-                        .addGap(0, 275, Short.MAX_VALUE)))
+                        .addGap(0, 352, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
