@@ -268,13 +268,18 @@ public class GameCFour extends JFrame {
             desactivarConectores();
             String nombre = colorActual=='R'?user1.getNombre():user2.getNombre();
             JOptionPane.showMessageDialog(this, "Ha ganado el jugador " + nombre, "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
-            if (colorActual == 'R')
+            if (colorActual == 'R'){
+                user1.addWinPoints();
                 terminarPartida('T', 'G', 'C');
-            else
+            }else{
+                user2.addWinPoints();
                 terminarPartida('T', 'P', 'C');
+            }
         }else if (empate()){
             desactivarConectores();
             JOptionPane.showMessageDialog(this, "Empate Declarado, han ganado 1 pt cada uno", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+            user1.addEmpatePoints();
+            user2.addEmpatePoints();
             terminarPartida('T', 'E', 'C');
         }else{
             turno++;
@@ -339,7 +344,7 @@ public class GameCFour extends JFrame {
     
     private void pausaActionPerformed(ActionEvent evt) {
         //Aqui el codigo
-        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente salir del sistema?", "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente pausar la partida?", "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
             terminarPartida('P', 'V', 'V');
             JOptionPane.showMessageDialog(this, "Partida pausada exitosamente, puede reanudarla desde el menu principal", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
             dispose();
@@ -348,7 +353,7 @@ public class GameCFour extends JFrame {
     
     private void retirarActionPerformed(ActionEvent evt) {
         //Aqui el codigo
-        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente salir del sistema?", "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente retirarse de la partida?", "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
             if (loggedIn == usuarioActual)
                 terminarPartida('T', 'P', 'R');
             else
