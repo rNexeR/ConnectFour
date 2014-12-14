@@ -17,16 +17,22 @@ import java.io.RandomAccessFile;
  */
 public class GameNumeraciones {
     public static int getNextNumPartida(Usuarios loggedIn){
+        System.out.println("Solicitando nuevo numero de partida");
         File n = new File("GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername() + File.separator + "numeracion.num");
         int num = -1;
         try {
             RandomAccessFile m = new RandomAccessFile(n, "rw");
             m.seek(0);
             num = m.readInt();
+            
+            m.seek(0);
+            m.writeInt(num+1);
+            
             m.close();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
+        System.out.println("Numero de partida: " + num);
         return num;
     }
     
@@ -37,6 +43,10 @@ public class GameNumeraciones {
             RandomAccessFile m = new RandomAccessFile(n, "rw");
             m.seek(0);
             num = m.readInt();
+            
+            m.seek(0);
+            m.writeInt(num+1);
+            
             m.close();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());

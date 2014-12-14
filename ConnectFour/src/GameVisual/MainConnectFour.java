@@ -150,7 +150,7 @@ public class MainConnectFour extends javax.swing.JFrame {
                     GameUsuarios.saveUsers();
                     File user = new File("GameFiles"+File.separator+"usuarios"+File.separator+name+File.separator+"tableros");
                     user.mkdirs();
-                    crearNumeraciones(name);
+                    crearNumeraciones(usern);
                     JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
                     exitAddUser();
                 }catch(NullPointerException ex){
@@ -163,17 +163,20 @@ public class MainConnectFour extends javax.swing.JFrame {
     }
     
     private void crearNumeraciones(String name){
-        File user;
         try {
-            user = new File("GameFiles"+File.separator+"usuarios"+File.separator+name+File.separator+"tableros"+File.separator+"numeracion.num");
-            user.createNewFile();
-            RandomAccessFile u = new RandomAccessFile(user, "rw");
-            u.writeInt(0);
+            File user = new File("GameFiles"+File.separator+"usuarios"+File.separator+name+File.separator+"tableros"+File.separator+"numeracion.num");
+            if (!user.exists()){
+                user.createNewFile();
+                RandomAccessFile u = new RandomAccessFile(user, "rw");
+                u.writeInt(1);
+            }
             
             user = new File("GameFiles"+File.separator+"usuarios"+File.separator+name+File.separator+"numeracion.num");
-            user.createNewFile();
-            u = new RandomAccessFile(user, "rw");
-            u.writeInt(0);
+            if (!user.exists()){
+                user.createNewFile();
+                RandomAccessFile u = new RandomAccessFile(user, "rw");
+                u.writeInt(1);
+            }
         } catch (IOException ex) {
             System.out.println("Error al crear directorios de Usuario");
         }

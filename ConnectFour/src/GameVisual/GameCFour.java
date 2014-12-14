@@ -134,7 +134,7 @@ public class GameCFour extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(610, 700));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -260,11 +260,14 @@ public class GameCFour extends JFrame {
             desactivarConectores();
             String nombre = colorActual=='R'?user1.getNombre():user2.getNombre();
             JOptionPane.showMessageDialog(this, "Ha ganado el jugador " + nombre, "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
-            // terminar partida
+            if (colorActual == 'R')
+                terminarPartida('T', 'G', 'C');
+            else
+                terminarPartida('T', 'P', 'C');
         }else if (empate()){
             desactivarConectores();
             JOptionPane.showMessageDialog(this, "Empate Declarado, han ganado 1 pt cada uno", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
-            //terminarPartida
+            terminarPartida('T', 'E', 'C');
         }else{
             turno++;
             //colorActual = colorActual=='R'?'A':'R';
@@ -331,6 +334,7 @@ public class GameCFour extends JFrame {
         if (JOptionPane .showConfirmDialog(this, "¿Desea realmente salir del sistema?", "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
             terminarPartida('P', 'V', 'V');
             JOptionPane.showMessageDialog(this, "Partida pausada exitosamente, puede reanudarla desde el menu principal", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+            dispose();
         }
     }
     
@@ -342,6 +346,7 @@ public class GameCFour extends JFrame {
             else
                 terminarPartida('T', 'G', 'R');
             JOptionPane.showMessageDialog(this, "Partida pausada exitosamente, puede reanudarla desde el menu principal", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+            dispose();
         }
         
     }
@@ -349,6 +354,7 @@ public class GameCFour extends JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void terminarPartida(char estado, char resultado, char tipoResultado){
+        System.out.println("Finalizando Partida, tipo Inicio: " + tipoInicio);
         if (tipoInicio == 'N'){
             System.out.println("Guardando nueva partida, estado: " + estado);
             terminarPartidaNueva(estado, resultado, tipoResultado);
@@ -366,7 +372,7 @@ public class GameCFour extends JFrame {
                 }
             }else{
                 System.out.println("Guardando nueva partida, estado: " + estado + " resultado: Pendiente");
-                
+                terminarPartidaCargada(estado, resultado, tipoResultado);
             }
         }
     }
