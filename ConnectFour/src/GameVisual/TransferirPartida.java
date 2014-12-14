@@ -132,14 +132,30 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
                 File ser = new File(dir + File.separator + "tableros" + File.separator + partida + ".ser");
                 int numP = GameNumeraciones.getNextNumPartida(GameUsuarios.searchUser(user));
                 int numS = GameNumeraciones.getNextNumTablero(GameUsuarios.searchUser(user));
-                par.renameTo(new File("GameFiles" + File.separator + "usuarios" + File.separator + user + File.separator + "partida#"+numP + ".par"));
+                String dirPartida = "GameFiles" + File.separator + "usuarios" + File.separator + user + File.separator + "partida#"+numP + ".par";
+                par.renameTo(new File(dirPartida));
                 ser.renameTo(new File("GameFiles" + File.separator + "usuarios" + File.separator + user + File.separator + "tableros" + File.separator + numP + ".ser"));
+                cambiarNumPartida(numP, dirPartida);
                 JOptionPane.showMessageDialog(this, "Partida Transferida", "ConnectFour", 
                     JOptionPane.INFORMATION_MESSAGE);
+                dispose();
             }
         }
     }//GEN-LAST:event_btnaceptarActionPerformed
 
+    private void cambiarNumPartida(int numP, String filename){
+        try{
+            File in = new File(filename);
+            RandomAccessFile partida = new RandomAccessFile(in, "rw");
+            partida.writeInt(numP);
+            partida.close();
+        }catch(IOException ex){
+            JOptionPane.showMessageDialog(this, "Error al Eliminar Partida \n" + ex.getMessage(), "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }
+    
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
         dispose();
