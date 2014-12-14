@@ -9,13 +9,9 @@ import Librerias.Usuarios;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -103,69 +99,84 @@ public class MainConnectFour extends javax.swing.JFrame {
         btnaceptar.setSize(100, 30);
         btncancelar.setSize(100, 30);
     }
-    
-    private void close(){
-        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente salir del sistema?",
-                "Salir del sistema", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION)
-            System .exit(0);
-    }   
-    
+        
+    /**
+     * Depdendiendo de la opción, realizará el aceptar para 
+     * agregar usuarios o para el login
+     * @param evt 
+     */
     private void btnaceptarActionPerformed(ActionEvent evt) {
         //Aqui el Codigo
         if (op == 'L'){
-            if (GameUsuarios.users.size() > 0){
-                String user1 = txtuser.getText();
-                Usuarios buscar = GameUsuarios.searchUser(user1);
-                if (buscar != null){
-                    String passwd = new String(txtpass.getPassword());
-                    if (buscar.getPassword().equals(passwd)){
-                        System.out.println("Sesion Iniciada");
-                        //Llamar Formulario de ConnectFour
-                        exitLogin();
-                        new Menu(buscar).setVisible(true);
-                        this.dispose();
-                    }else
-                        JOptionPane.showMessageDialog(this, "Usuario y Contraseña no coinciden", "Error al Inicar Sesion", JOptionPane.INFORMATION_MESSAGE);
-                }else
-                    JOptionPane.showMessageDialog(this, "Usuario no Encontrado", "Error al Inicar Sesion", JOptionPane.INFORMATION_MESSAGE);
-            }else{
-                JOptionPane.showMessageDialog(this, "No hay registros de Usuarios creados", "Error al Inicar Sesion", JOptionPane.INFORMATION_MESSAGE);
-                exitLogin();
-            }
+            loginActions();
         }else{
             //addUser
-            String usern = txtuser.getText();
-            Usuarios buscar = GameUsuarios.searchUser(usern);
+            agregarUsuariosActions();
+        }
+    }
+    
+    /**
+     * Realiza los procesos necesarios para inicar sesión
+     */
+    private void loginActions(){
+        if (GameUsuarios.users.size() > 0){
+            String user1 = txtuser.getText();
+            Usuarios buscar = GameUsuarios.searchUser(user1);
             if (buscar != null){
-                JOptionPane.showMessageDialog(this, "Usuario ya Existe", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-                exitAddUser();
-                return;
-            }else{
-                try{
-                    String pass = new String(txtpass.getPassword());
-                    String name = txtnombre.getText();
-                    long fec = getTime(txtfecha.getText());
-                    GameUsuarios.users.add(new Usuarios(name, usern, pass, fec));
-                    System.out.println("Usuario Creado");
-                    GameUsuarios.saveUsers();
-                    File user = new File("GameFiles"+File.separator+"usuarios"+File.separator+name+File.separator+"tableros");
-                    user.mkdirs();
-                    crearNumeraciones(usern);
-                    JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-                    exitAddUser();
-                }catch(NullPointerException ex){
-                    JOptionPane.showMessageDialog(this, "Llene todos los campos con el formato requerido, de tenerlo", 
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                    System.out.println("Campos Vacios");
-                }catch(NumberFormatException ex){
-                    JOptionPane.showMessageDialog(this, "Llene todos los campos con el formato requerido, de tenerlo", 
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }catch (Exception ex){
-                    JOptionPane.showMessageDialog(this, "Revise sus datos de ingreso.", 
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                
-            }
+                String passwd = new String(txtpass.getPassword());
+                if (buscar.getPassword().equals(passwd)){
+                    System.out.println("Sesion Iniciada");
+                    //Llamar Formulario de ConnectFour
+                    exitLogin();
+                    new Menu(buscar).setVisible(true);
+                    this.dispose();
+                }else
+                    JOptionPane.showMessageDialog(this, "Usuario y Contraseña no coinciden", "Error al Inicar Sesion", 
+                    JOptionPane.INFORMATION_MESSAGE);                
+            }else
+                JOptionPane.showMessageDialog(this, "Usuario no Encontrado", "Error al Inicar Sesion", 
+                    JOptionPane.INFORMATION_MESSAGE);            
+        }else{                
+            JOptionPane.showMessageDialog(this, "No hay registros de Usuarios creados", "Error al Inicar Sesion",
+                    JOptionPane.INFORMATION_MESSAGE);               
+            exitLogin();         
+        }
+    }
+    
+    /**
+     * Realiza los procesos necesarios para agregar un usuario
+     */
+    private void agregarUsuariosActions(){
+        String usern = txtuser.getText();         
+        Usuarios buscar = GameUsuarios.searchUser(usern);
+        if (buscar != null){
+            JOptionPane.showMessageDialog(this, "Usuario ya Existe", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+            exitAddUser();         
+        }else{                
+            try{
+                String password = new String(txtpass.getPassword());
+                String name = txtnombre.getText();
+                long fec = getTime(txtfecha.getText());
+                GameUsuarios.users.add(new Usuarios(name, usern, password, fec));
+                System.out.println("Usuario Creado");
+                GameUsuarios.saveUsers();
+                    
+                File userFile = new File("GameFiles"+File.separator+"usuarios"+File.separator+name+File.separator+"tableros");
+                userFile.mkdirs();
+                crearNumeraciones(usern);
+                JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                exitAddUser();                
+            }catch(NullPointerException ex){
+                JOptionPane.showMessageDialog(this, "Llene todos los campos con el formato requerido, de tenerlo",                            
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                System.out.println("Campos Vacios");               
+            }catch(NumberFormatException ex){                  
+                JOptionPane.showMessageDialog(this, "Llene todos los campos con el formato requerido, de tenerlo", 
+                            "Error", JOptionPane.ERROR_MESSAGE);             
+            }catch (Exception ex){               
+                JOptionPane.showMessageDialog(this, "Revise sus datos de ingreso.", 
+                            "Error", JOptionPane.ERROR_MESSAGE);            
+            }   
         }
     }
     
@@ -199,6 +210,9 @@ public class MainConnectFour extends javax.swing.JFrame {
         return tmp.getTimeInMillis();
     }
     
+    /**
+     * Remueve todos los objetos relacionados al login
+     */
     private void exitLogin(){
         getContentPane().remove(txtuser);
         getContentPane().remove(txtpass);
@@ -210,6 +224,10 @@ public class MainConnectFour extends javax.swing.JFrame {
         exit();
     }
     
+    /**
+     * Remueve todos los objetos relaciones al
+     * agregar usuarios
+     */
     private void exitAddUser(){
         getContentPane().remove(txtuser);
         getContentPane().remove(txtpass);
@@ -225,6 +243,10 @@ public class MainConnectFour extends javax.swing.JFrame {
         exit();
     }
     
+    /**
+     * Quita los botones de aceptar y cancelar
+     * para los forms auxiliares
+     */
     private void exit(){
         getContentPane().remove(btnaceptar);
         getContentPane().remove(btncancelar);
@@ -232,6 +254,10 @@ public class MainConnectFour extends javax.swing.JFrame {
         getContentPane().repaint();
     }
     
+    /**
+     * Dependiendo de la opción, se sale del login o agregar usuarios
+     * @param evt 
+     */
     private void btncancelarActionPerformed(ActionEvent evt) {
         //Aqui el Codigo
         if (op == 'L'){
@@ -242,6 +268,10 @@ public class MainConnectFour extends javax.swing.JFrame {
             
     }
     
+    /**
+     * Ejecuta la función <code>clicLogin()</code>
+     * @param evt 
+     */
     private void loginActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         System.out.println("Login");
@@ -249,6 +279,10 @@ public class MainConnectFour extends javax.swing.JFrame {
         clicLogin();
     }
     
+    /**
+     * Ejecuta la función <code>clicAddUser()</code>
+     * @param evt 
+     */
     private void addUserActionPerformed(ActionEvent evt) {
         //Aqui el Codigo
         System.out.println("AddUser");
@@ -256,6 +290,10 @@ public class MainConnectFour extends javax.swing.JFrame {
         clicAddUser();
     }
     
+    /**
+     * Settea los fields y botones para agregar
+     * más usuarios al juego
+     */
     private void clicAddUser(){
         changeOptionEnabled(false);
         moveOption(login, -login.getY()+1);
@@ -317,22 +355,36 @@ public class MainConnectFour extends javax.swing.JFrame {
         btncancelar.setLocation(txtpass.getX()+txtpass.getWidth(), txtpass.getY());
     }
     
+    /**
+     * Evento para salir del form (y todo el juego)
+     * @param evt 
+     */
     private void salirActionPerformed(ActionEvent evt) {
         //Aqui el Codigo
         System.out.println("Salir");
-        int op = JOptionPane.showConfirmDialog(this, "Desea Salir", "Confirmacion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int op = JOptionPane.showConfirmDialog(this, "Desea Salir", "Confirmacion",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (op == JOptionPane.YES_OPTION){
             //Serializacion y Archivos Binarios
             dispose();
         }
     }
     
+    /**
+     * Cambia el estado de disponibilidad
+     * de las demás opciones
+     * @param state 
+     */
     private void changeOptionEnabled(boolean state){
         login.setEnabled(state);
         addUser.setEnabled(state);
         salir.setEnabled(state);
     }
     
+    /**
+     * Muestra los JTextFields y botones para 
+     * loggearse en el juego al elegir la opción de iniciar sesión
+     */
     private void clicLogin(){
         changeOptionEnabled(false);
         moveOption(addUser, 90);
@@ -369,6 +421,11 @@ public class MainConnectFour extends javax.swing.JFrame {
         btncancelar.setLocation(txtpass.getX()+txtpass.getWidth(), txtpass.getY());
     }
     
+    /**
+     * Settea las posiciones de los botones al cambiar de opción
+     * @param x Posición en x del botón
+     * @param y Posición en y del botón
+     */
     private void moveOption(JButton x, int y){
         x.setLocation(x.getX(), x.getY() + y);
     }
@@ -383,7 +440,7 @@ public class MainConnectFour extends javax.swing.JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Connect Four - by NxRodriguez && RaimMaster");
+        setTitle("Connect Four - by NxRodriguez && Raimmaster");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
