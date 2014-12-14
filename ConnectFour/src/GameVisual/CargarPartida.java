@@ -6,17 +6,65 @@
 
 package GameVisual;
 
+import Librerias.Usuarios;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.RandomAccessFile;
+import java.util.Date;
+import java.util.Formatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author KELVIN
  */
 public class CargarPartida extends javax.swing.JInternalFrame {
 
+    private Usuarios loggedUser;
+    private String dir;
     /**
      * Creates new form CargarPartida
+     * @param usuario
      */
-    public CargarPartida() {
-        initComponents();
+    public CargarPartida(Usuarios usuario) {
+        initComponents();        
+        loggedUser = usuario;        
+        dir = "GameFiles" + File.separator + "usuarios" + File.separator + loggedUser.getUsername();
+        loadPartidasPendientes();        
+    }
+    
+    private void loadPartidasPendientes(){
+        File fi = new File(dir);                     
+                       
+        String [] files = fi.list();        
+        for (String s : files){
+            if (s.startsWith("partida")){                
+                fi = new File(dir + File.separator + s);
+                try {
+                    RandomAccessFile rPartida = new RandomAccessFile(fi, "r");
+                    //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
+                    int numPartida = rPartida.readInt();
+                    String userActual = rPartida.readUTF();
+                    String adversario = rPartida.readUTF();
+                    Date fecha = new Date(rPartida.readLong());
+                    
+                    rPartida.close();
+                    Formatter formato = new Formatter();
+                    formato.format("%d - %s VS %s - Iniciado en: %tc", numPartida, userActual, adversario 
+                            , fecha);
+                    JCPartidas.addItem(formato.toString());                    
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(rootPane, "Error",
+                            "Error con los archivos", JOptionPane.ERROR_MESSAGE);
+                }
+                
+            }
+        }        
     }
 
     /**
@@ -35,8 +83,6 @@ public class CargarPartida extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Seleccione Partida:");
 
-        JCPartidas.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         btnaceptar.setText("Cargar");
         btnaceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -45,23 +91,30 @@ public class CargarPartida extends javax.swing.JInternalFrame {
         });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(JCPartidas, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(JCPartidas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(168, 168, 168)
                         .addComponent(btnaceptar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCancelar)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btnCancelar)
+                        .addGap(0, 275, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -70,11 +123,11 @@ public class CargarPartida extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(JCPartidas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnaceptar)
                     .addComponent(btnCancelar))
-                .addContainerGap())
+                .addGap(35, 35, 35))
         );
 
         pack();
@@ -82,7 +135,26 @@ public class CargarPartida extends javax.swing.JInternalFrame {
 
     private void btnaceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarActionPerformed
         // TODO add your handling code here:
+        try{            
+            char correlativo = JCPartidas.getSelectedItem().toString().charAt(0);
+            String filenamePartida = dir + File.separator +
+                    "partida#" + correlativo + ".par";
+            String filenameCirculos = dir + File.separator + "tableros" + File.separator 
+                    + correlativo + ".ser";
+            new GameCFour(loggedUser, filenamePartida, filenameCirculos /*anterior, partida; aqui, filename circulos */).setVisible(true);
+            dispose();
+        }catch (Exception ex){                           
+            JOptionPane.showMessageDialog(this, "Error", "Error buscando archivos", 
+                    JOptionPane.ERROR_MESSAGE);
+
+        }
+        
     }//GEN-LAST:event_btnaceptarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -178,7 +178,7 @@ public class Menu extends javax.swing.JFrame {
 
     private void jmiCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiCargarActionPerformed
         // TODO add your handling code here:
-        CargarPartida cp = new CargarPartida();
+        CargarPartida cp = new CargarPartida(loggedUser);
         jDMenus.add(cp);
         cp.show();
     }//GEN-LAST:event_jmiCargarActionPerformed
