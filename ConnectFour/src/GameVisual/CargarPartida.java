@@ -52,14 +52,16 @@ public class CargarPartida extends javax.swing.JInternalFrame {
                     String userActual = rPartida.readUTF();
                     String adversario = rPartida.readUTF();
                     Date fecha = new Date(rPartida.readLong());
-                    rPartida.skipBytes(6);
+                    rPartida.skipBytes(4);
+                    char estado = rPartida.readChar();
                     int turno = rPartida.readInt();
                     
                     rPartida.close();
                     Formatter formato = new Formatter();
                     formato.format("%d - %s VS %s - Iniciado en: %tc - Turno %d", numPartida, userActual, adversario 
                             , fecha, turno);
-                    JCPartidas.addItem(formato.toString());                    
+                    if (estado == 'P')
+                        JCPartidas.addItem(formato.toString());                    
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(rootPane, "Error",
                             "Error con los archivos", JOptionPane.ERROR_MESSAGE);

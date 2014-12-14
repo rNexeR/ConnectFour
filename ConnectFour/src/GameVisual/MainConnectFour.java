@@ -162,7 +162,7 @@ public class MainConnectFour extends javax.swing.JFrame {
                 GameUsuarios.saveUsers();
                     
                 File userFile = new File("GameFiles" + File.separator
-                        + "usuarios" + File.separator + name+File.separator + "tableros");
+                        + "usuarios" + File.separator + usern + File.separator + "tableros");
                 userFile.mkdirs();
                 crearNumeraciones(usern);
                 JOptionPane.showMessageDialog(this, "Usuario Creado Exitosamente", 
