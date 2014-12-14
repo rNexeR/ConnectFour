@@ -6,17 +6,31 @@
 
 package GameVisual;
 
+import Librerias.Usuarios;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Date;
+import java.util.Formatter;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author KELVIN
  */
 public class TransferirPartida extends javax.swing.JInternalFrame {
-
+    private Usuarios loggedUser;
+    private String dir;
     /**
      * Creates new form TransferirPartida
      */
-    public TransferirPartida() {
+    public TransferirPartida(Usuarios usuario) {
         initComponents();
+        initComponents();        
+        loggedUser = usuario;        
+        dir = "GameFiles" + File.separator + "usuarios" + File.separator + loggedUser.getUsername();
+        loadPartidasPendientes(); 
+        loadUsuarios(loggedUser);
     }
 
     /**
@@ -37,8 +51,6 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Seleccione Partida:");
 
-        JCPartidas.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         btnaceptar.setText("Transferir");
         btnaceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -47,10 +59,13 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
         });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Seleccione Usuario:");
-
-        JCUsuarios.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -62,16 +77,19 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(JCPartidas, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(JCPartidas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnaceptar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCancelar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(JCUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnaceptar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCancelar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(JCUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 347, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -80,7 +98,7 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(JCPartidas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(JCUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -88,16 +106,89 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnaceptar)
                     .addComponent(btnCancelar))
-                .addContainerGap())
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    private void loadUsuarios(Usuarios currentUser){
+        GameUsuarios.loadUsers(); 
+        loggedUser = currentUser;
+        for(Usuarios u : GameUsuarios.users){
+            System.out.println(u.getNombre());
+            if(u != currentUser)
+                JCUsuarios.addItem(u.getUsername());
+        }
+    }
+    
     private void btnaceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarActionPerformed
         // TODO add your handling code here:
+        if (JCPartidas.getItemCount()>0 && JCUsuarios.getItemCount()>0){
+            char partida = JCPartidas.getSelectedItem().toString().charAt(0);
+            String user = JCUsuarios.getSelectedItem().toString();
+            if (JOptionPane .showConfirmDialog(this, "¿Desea realmente transferir la partida?", "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+                File par = new File(dir + File.separator + "partida#" + partida + ".par");
+                File ser = new File(dir + File.separator + "tableros" + File.separator + partida + ".ser");
+                int numP = GameNumeraciones.getNextNumPartida(GameUsuarios.searchUser(user));
+                int numS = GameNumeraciones.getNextNumTablero(GameUsuarios.searchUser(user));
+                String dirPartida = "GameFiles" + File.separator + "usuarios" + File.separator + user + File.separator + "partida#"+numP + ".par";
+                par.renameTo(new File(dirPartida));
+                ser.renameTo(new File("GameFiles" + File.separator + "usuarios" + File.separator + user + File.separator + "tableros" + File.separator + numP + ".ser"));
+                cambiarNumPartida(numP, dirPartida);
+                JOptionPane.showMessageDialog(this, "Partida Transferida", "ConnectFour", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+            }
+        }
     }//GEN-LAST:event_btnaceptarActionPerformed
 
+    private void cambiarNumPartida(int numP, String filename){
+        try{
+            File in = new File(filename);
+            RandomAccessFile partida = new RandomAccessFile(in, "rw");
+            partida.writeInt(numP);
+            partida.close();
+        }catch(IOException ex){
+            JOptionPane.showMessageDialog(this, "Error al Eliminar Partida \n" + ex.getMessage(), "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }
+    
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+    
+    private void loadPartidasPendientes(){
+        File fi = new File(dir);                     
+                       
+        String [] files = fi.list();        
+        for (String s : files){
+            if (s.startsWith("partida")){                
+                fi = new File(dir + File.separator + s);
+                try {
+                    RandomAccessFile rPartida = new RandomAccessFile(fi, "r");
+                    //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
+                    int numPartida = rPartida.readInt();
+                    String userActual = rPartida.readUTF();
+                    String adversario = rPartida.readUTF();
+                    Date fecha = new Date(rPartida.readLong());
+                    
+                    rPartida.close();
+                    Formatter formato = new Formatter();
+                    formato.format("%d - %s VS %s - Iniciado en: %tc", numPartida, userActual, adversario 
+                            , fecha);
+                    JCPartidas.addItem(formato.toString());                    
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(rootPane, "Error",
+                            "Error con los archivos", JOptionPane.ERROR_MESSAGE);
+                }
+                
+            }
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox JCPartidas;

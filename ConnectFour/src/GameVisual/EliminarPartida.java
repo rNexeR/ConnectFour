@@ -127,14 +127,15 @@ public class EliminarPartida extends javax.swing.JInternalFrame {
     
     private void btnaceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarActionPerformed
         // TODO add your handling code here:
-        if (JOptionPane .showConfirmDialog(this, "¿Desea realmente eliminar esta partida?",
-                "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
-            String archivo = JCPartidas.getSelectedItem().toString();
-            if (archivo != null){
-                File partida = new File("GameFiles/usuarios/"+currentUser.getUsername()+"/"+archivo);
-                partida.delete();
-                loadPartidas();
-                JOptionPane.showMessageDialog(this, "Partida Eliminada", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+        if (JCPartidas.getItemCount()>0){
+            if (JOptionPane .showConfirmDialog(this, "¿Desea realmente eliminar esta partida?",
+                    "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+                char archivo = JCPartidas.getSelectedItem().toString().charAt(0);
+                    File partida = new File("GameFiles/usuarios/"+currentUser.getUsername()+"/"+"partida#"+archivo+".par");
+                    partida.delete();
+                    loadPartidas();
+                    JOptionPane.showMessageDialog(this, "Partida Eliminada", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
             }
         }
         
