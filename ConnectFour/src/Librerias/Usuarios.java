@@ -105,4 +105,12 @@ public class Usuarios {
         System.out.printf("Nombre: %s - Username: %s \n", 
                 getNombre(), getUsername());
     }
+    
+    public void addWinPoints(){
+        puntos+=3;
+    }
+    
+    public void addEmpatePoints(){
+        puntos++;
+    }
 }
