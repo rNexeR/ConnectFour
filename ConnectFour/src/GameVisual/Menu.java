@@ -225,10 +225,15 @@ public class Menu extends javax.swing.JFrame {
         if (JOptionPane .showConfirmDialog(this, "¿Desea realmente eliminar su Usuario?",
                 "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
             System.out.println(loggedUser.getUsername());
-            GameUsuarios.deleteUser(loggedUser);
-            loggedUser = null;
-            new MainConnectFour().setVisible(true);
-            dispose();
+            if(GameUsuarios.deleteUser(loggedUser)){    
+                System.out.println("SI - BORRADO");
+                loggedUser = null;
+                new MainConnectFour().setVisible(true);
+                dispose();
+            }else
+                JOptionPane.showMessageDialog(this, "Error al eliminar.", "Eliminación fallida",
+                        JOptionPane.INFORMATION_MESSAGE);
+            
         }
         
     }//GEN-LAST:event_jMenuItem7ActionPerformed
