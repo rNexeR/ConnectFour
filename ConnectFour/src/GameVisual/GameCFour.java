@@ -274,7 +274,8 @@ public class GameCFour extends JFrame {
         return false;
     }
     
-    private void validarGameOver(int col){
+    private boolean validarGameOver(int col){
+        boolean win = true;
         if (downCircle(col)){
             desactivarConectores();
             String nombre = colorActual=='R'?user1.getNombre():user2.getNombre();
@@ -299,6 +300,7 @@ public class GameCFour extends JFrame {
             writeLog(user2, numPartida, 'T', 'E', 'C');
             terminarPartida('T', 'E', 'C');
         }else{
+            win = false;
             turno++;
             //colorActual = colorActual=='R'?'A':'R';
             if (colorActual == 'R'){
@@ -311,6 +313,7 @@ public class GameCFour extends JFrame {
                 activarOpciones(true);
             }
         }
+        return win;
     }
     
     private void activarOpciones(boolean x){
@@ -320,49 +323,49 @@ public class GameCFour extends JFrame {
     private void col1ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 0;
-        validarGameOver(col);
-        col1.setEnabled(validarColumnaLlena(col));
+        if (!validarGameOver(col))
+            col1.setEnabled(validarColumnaLlena(col));
     }
     
     private void col2ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 1;
-        validarGameOver(col);
+        if (!validarGameOver(col))
         col2.setEnabled(validarColumnaLlena(col));
     }
     
     private void col3ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 2;
-        validarGameOver(col);
+        if (!validarGameOver(col))
         col3.setEnabled(validarColumnaLlena(col));
     }
     
     private void col4ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 3;
-        validarGameOver(col);
+        if (!validarGameOver(col))
         col4.setEnabled(validarColumnaLlena(col));
     }
     
     private void col5ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 4;
-        validarGameOver(col);
+        if (!validarGameOver(col))
         col5.setEnabled(validarColumnaLlena(col));
     }
     
     private void col6ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 5;
-        validarGameOver(col);
+        if (!validarGameOver(col))
         col6.setEnabled(validarColumnaLlena(col));
     }
     
     private void col7ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 6;
-        validarGameOver(col);
+        if (!validarGameOver(col))
         col7.setEnabled(validarColumnaLlena(col));
     }
     
