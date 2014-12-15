@@ -7,18 +7,12 @@
 package GameVisual;
 
 import Librerias.GamesPendientes;
+import Librerias.UserNoLongerExistsException;
 import Librerias.Usuarios;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Formatter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -121,17 +115,36 @@ public class CargarPartida extends javax.swing.JInternalFrame {
                     "partida#" + correlativo + ".par";
             String filenameCirculos = dir + File.separator + "tableros" + File.separator 
                     + correlativo + ".ser";
-            new GameCFour(loggedUser, filenamePartida, filenameCirculos /*anterior, partida; aqui, filename circulos */).setVisible(true);
+             /*anterior, partida; aqui, filename circulos */
+            checkForAdversary(filenamePartida);
+            new GameCFour(loggedUser, filenamePartida, filenameCirculos).setVisible(true);
+            dispose();
+        }catch (UserNoLongerExistsException unl){
+            JOptionPane.showMessageDialog(this, unl.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
             dispose();
         }catch (Exception ex){                           
             JOptionPane.showMessageDialog(this, "Error buscando archivos - Cerciorese que hayan partidas que cargar",
                     "Error", JOptionPane.ERROR_MESSAGE);
             //ex.printStackTrace();
-
         }
         
     }//GEN-LAST:event_btnaceptarActionPerformed
 
+    private void checkForAdversary(String filename) throws UserNoLongerExistsException, IOException{
+        RandomAccessFile rPartida = new RandomAccessFile(filename, "r");
+        rPartida.readInt();
+        rPartida.readUTF();
+        String adversario = rPartida.readUTF();
+        if(GameUsuarios.searchUser(adversario) == null){
+            rPartida.close();
+            new File(filename).delete();
+            throw new UserNoLongerExistsException("El usuario " + adversario + " ya no existe. Borrando partida"); 
+        }
+        
+        
+    }
+    
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
         dispose();
