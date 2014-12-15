@@ -90,6 +90,32 @@ public class GameCFour extends JFrame {
         this.loggedIn = loggedIn;
         //Extraer Serializados
         loadSquares(filenameCirculos);
+        for (int i = 0; i < 7; i++) {
+            System.out.println("Validando columnas llenas");
+                switch (i){
+                    case 0:
+                        col1.setEnabled(validarColumnaLlena(i));
+                        break;
+                    case 1:
+                        col2.setEnabled(validarColumnaLlena(i));
+                        break;
+                    case 2:
+                        col3.setEnabled(validarColumnaLlena(i));
+                        break;
+                    case 3:
+                        col4.setEnabled(validarColumnaLlena(i));
+                        break;
+                    case 4:
+                        col5.setEnabled(validarColumnaLlena(i));
+                        break;
+                    case 5:
+                        col6.setEnabled(validarColumnaLlena(i));
+                        break;
+                    case 6:
+                        col7.setEnabled(validarColumnaLlena(i));
+                        break;
+                }
+        }
         
     }
     
