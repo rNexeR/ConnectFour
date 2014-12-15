@@ -154,9 +154,9 @@ public class CargarPartida extends javax.swing.JInternalFrame {
             new GameCFour(loggedUser, filenamePartida, filenameCirculos /*anterior, partida; aqui, filename circulos */).setVisible(true);
             dispose();
         }catch (Exception ex){                           
-            JOptionPane.showMessageDialog(this, "Error", "Error buscando archivos", 
-                    JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error buscando archivos - Cerciorese que hayan partidas que cargar",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            //ex.printStackTrace();
 
         }
         
