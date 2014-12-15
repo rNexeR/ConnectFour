@@ -212,7 +212,7 @@ public class MainConnectFour extends javax.swing.JFrame {
     private long getTime(String fecha){
         String fech[] = fecha.split("-");
         int d = Integer.parseInt(fech[0]);
-        int m = Integer.parseInt(fech[1]);
+        int m = Integer.parseInt(fech[1])-1;
         int a = Integer.parseInt(fech[2]);
         Calendar tmp = Calendar.getInstance();
         tmp.set(a, m, d);
