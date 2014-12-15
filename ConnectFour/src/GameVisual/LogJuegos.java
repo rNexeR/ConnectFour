@@ -6,6 +6,14 @@
 
 package GameVisual;
 
+import Librerias.Usuarios;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Date;
+import java.util.Formatter;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author KELVIN
@@ -15,8 +23,9 @@ public class LogJuegos extends javax.swing.JInternalFrame {
     /**
      * Creates new form LogJuegos
      */
-    public LogJuegos() {
+    public LogJuegos(Usuarios loggedUser) {
         initComponents();
+        loadJuegos(loggedUser);
     }
 
     /**
@@ -29,10 +38,10 @@ public class LogJuegos extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbJuegos = new javax.swing.JTable();
         btnCerrar = new javax.swing.JButton();
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbJuegos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -55,7 +64,7 @@ public class LogJuegos extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tbJuegos);
 
         btnCerrar.setText("Cerrar");
         btnCerrar.addActionListener(new java.awt.event.ActionListener() {
@@ -73,7 +82,6 @@ public class LogJuegos extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(76, 76, 76)
                         .addComponent(btnCerrar)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -99,6 +107,49 @@ public class LogJuegos extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tbJuegos;
     // End of variables declaration//GEN-END:variables
+
+    private void loadJuegos(Usuarios loggedUser) {
+        DefaultTableModel modelo = (DefaultTableModel)tbJuegos.getModel();
+        try{
+            File in = new File("GameFiles" + File.separator + "usuarios" + File.separator + loggedUser.getUsername()+ File.separator + "juegos.cfl");
+            RandomAccessFile rPartida = new RandomAccessFile(in, "rw");
+            while (rPartida.getFilePointer()<=rPartida.length()){
+                System.out.print("Cargando una partida");
+                    int numPartida = rPartida.readInt();
+                    String userActual = rPartida.readUTF();
+                    String adversario = rPartida.readUTF();
+                    Date fecha = new Date(rPartida.readLong());                    
+                    char estado = rPartida.readChar();
+                    char resultado = rPartida.readChar();
+                    char tipoResultado = rPartida.readChar();
+                    int turno = rPartida.readInt();
+                    
+                    String state = estado=='T'?"Terminada":"Pendiente";
+                    String result = null;
+                    String tipoR = "Pendiente";
+                    switch (resultado){
+                        case 'G':
+                            result = "Ganada";
+                            break;
+                        case 'E':
+                            result = "Empatada";
+                            break;
+                        case 'P':
+                            result = "Perdida";
+                            break;
+                        default:
+                            result = "Pendiente";
+                    }
+                    if (tipoResultado != 'V'){
+                        tipoR = tipoResultado == 'C'?"ConnectFour":"Retiro";
+                    }
+                    modelo.addRow(new Object[]{numPartida, userActual, adversario, fecha, state, result, tipoR});
+            }
+            rPartida.close();
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 }

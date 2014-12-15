@@ -402,6 +402,64 @@ public class GameCFour extends JFrame {
         }
     }
     
+    private long searchLog(int numP){
+        try{
+            File in = new File("GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername()+ File.separator + "juegos.log");
+            RandomAccessFile juegos = new RandomAccessFile(in, "rw");
+            while (juegos.getFilePointer()<=juegos.length()){
+                int num = juegos.readInt();
+                if (num == numP)
+                    return juegos.getFilePointer()-4;
+                juegos.readUTF();
+                juegos.readUTF();
+                juegos.skipBytes(18);
+            }
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return -1;
+    }
+    
+    private void writeLog(int numP, char estado, char resultado, char tipoResultado){
+        try{
+            File in = new File("GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername()+ File.separator + "juegos.cfl");
+            RandomAccessFile juegos = new RandomAccessFile(in, "rw");
+            
+            juegos.seek(juegos.length());
+            juegos.writeInt(numP);
+            juegos.writeUTF(user1.getUsername());
+            juegos.writeUTF(user2.getUsername());
+            juegos.writeLong(fecha);
+            juegos.writeChar(estado);
+            juegos.writeChar(resultado);
+            juegos.writeChar(tipoResultado);
+            juegos.writeInt(turno);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+    private void editLog(int numP, char estado, char resultado, char tipoResultado){
+        try{
+            File in = new File("GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername()+ File.separator + "juegos.cfl");
+            RandomAccessFile juegos = new RandomAccessFile(in, "rw");
+            long x = searchLog(numP);
+            if (x >= 0){
+                juegos.seek(x);
+                juegos.writeInt(numP);
+                juegos.readUTF();
+                juegos.readUTF();
+                juegos.readLong();
+                juegos.writeChar(estado);
+                juegos.writeChar(resultado);
+                juegos.writeChar(tipoResultado);
+                juegos.writeInt(turno);
+            }
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
     private void terminarPartidaNueva(char estado, char resultado, char tipoResultado){
         int numP = GameNumeraciones.getNextNumPartida(loggedIn);
         int numT = GameNumeraciones.getNextNumTablero(loggedIn);
@@ -419,6 +477,8 @@ public class GameCFour extends JFrame {
             m.writeChar(tipoResultado);
             m.writeInt(turno);
             m.close();
+            
+            writeLog(numP, estado, resultado, tipoResultado);
             
             String dir = "GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername() + File.separator + "tableros" + File.separator + numT +".ser";
             FileOutputStream fileOut = new FileOutputStream(dir);
@@ -472,6 +532,8 @@ public class GameCFour extends JFrame {
             m.writeChar(resultado);
             m.writeChar(tipoResultado);
             m.writeInt(turno);
+            
+            editLog(num, estado, resultado, tipoResultado);
             
             FileOutputStream fileOut = new FileOutputStream(tableroCargado);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -598,7 +660,7 @@ public class GameCFour extends JFrame {
         for (int i = 0; i < CANT_ROW; i++) {
             for(int j = 0; j < CANT_COL; j++){
                 h = (CircleLabels)square[i][j].getComponent(0);
-                if (h.descripcion != "Ficha Blank")
+                if (h.descripcion == "Ficha Blank")
                     return false;
             }
         }
