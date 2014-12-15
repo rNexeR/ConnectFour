@@ -7,6 +7,7 @@
 package GameVisual;
 
 import Librerias.GamesPendientes;
+import Librerias.UserNoLongerExistsException;
 import Librerias.Usuarios;
 import java.io.File;
 import java.io.IOException;
@@ -102,7 +103,7 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     
-    private String getAdversario(char partida){
+    private String getAdversario(char partida) throws UserNoLongerExistsException{
         String adversario = null;
         dir = "GameFiles" + File.separator + "usuarios" + File.separator + loggedUser.getUsername() + File.separator;
         File fi = new File(dir);
@@ -117,7 +118,15 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
                          //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
                          numPartida = rPartida.readInt();
                          String userActual = rPartida.readUTF();
-                         adversario = rPartida.readUTF();
+                         adversario = rPartida.readUTF();                         
+                         
+                        if(GameUsuarios.searchUser(adversario) == null){
+                            rPartida.close();
+                            new File(dir + File.separator + s).delete();
+                            throw new UserNoLongerExistsException("El usuario " + 
+                                    adversario + " ya no existe. Borrando partida"); 
+                        }
+                         
                          Date fecha = new Date(rPartida.readLong());
                          char estado = rPartida.readChar();
                          char resultado = rPartida.readChar();
@@ -145,32 +154,51 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
     
     private void btnaceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarActionPerformed
         // TODO add your handling code here:
-        if (JCPartidas.getItemCount()>0){
-            char partida = JCPartidas.getSelectedItem().toString().charAt(0);
-            if (JOptionPane .showConfirmDialog(this, "¿Desea realmente transferir la partida a su adversario?",
-                    "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
-                
-                File par = new File(dir + File.separator + "partida#" + partida + ".par");
-                File ser = new File(dir + File.separator + "tableros" + File.separator + partida + ".ser");
-                String user = getAdversario(partida);
-                int numP = GameNumeraciones.getNextNumPartida(GameUsuarios.searchUser(user));
-                //int numS = GameNumeraciones.getNextNumTablero(GameUsuarios.searchUser(user));
-                
-                String dirPartida = "GameFiles" + File.separator + "usuarios" + File.separator
-                        + user + File.separator + "partida#"+numP + ".par";
-                
-                par.renameTo(new File(dirPartida));
-                ser.renameTo(new File("GameFiles" + File.separator + "usuarios"
-                        + File.separator + user + File.separator + "tableros" + File.separator + numP + ".ser"));
-                cambiarNumPartida(numP, dirPartida);
-                
-                JOptionPane.showMessageDialog(this, "Partida Transferida", "ConnectFour", 
-                    JOptionPane.INFORMATION_MESSAGE);
-                dispose();
+        try{
+            if (JCPartidas.getItemCount()>0){
+                char partida = JCPartidas.getSelectedItem().toString().charAt(0);
+                if (JOptionPane .showConfirmDialog(this, "¿Desea realmente transferir la partida a su adversario?",
+                        "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+
+                    File par = new File(dir + File.separator + "partida#" + partida + ".par");
+                    File ser = new File(dir + File.separator + "tableros" + File.separator + partida + ".ser");
+                    String user = getAdversario(partida);
+                    int numP = GameNumeraciones.getNextNumPartida(GameUsuarios.searchUser(user));
+                    //int numS = GameNumeraciones.getNextNumTablero(GameUsuarios.searchUser(user));
+
+                    String dirPartida = "GameFiles" + File.separator + "usuarios" + File.separator
+                            + user + File.separator + "partida#"+numP + ".par";
+
+                    par.renameTo(new File(dirPartida));
+                    ser.renameTo(new File("GameFiles" + File.separator + "usuarios"
+                            + File.separator + user + File.separator + "tableros" + File.separator + numP + ".ser"));
+                    cambiarNumPartida(numP, dirPartida);
+
+                    JOptionPane.showMessageDialog(this, "Partida Transferida", "ConnectFour", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
+                }
             }
+        }catch (UserNoLongerExistsException unl){
+            JOptionPane.showMessageDialog(this, unl.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            dispose();
         }
+        
     }//GEN-LAST:event_btnaceptarActionPerformed
 
+    private void checkForAdversary(String filename) throws UserNoLongerExistsException, IOException{
+        RandomAccessFile rPartida = new RandomAccessFile(filename, "r");
+        rPartida.readInt();
+        rPartida.readUTF();
+        String adversario = rPartida.readUTF();
+        if(GameUsuarios.searchUser(adversario) == null){
+            rPartida.close();
+            new File(filename).delete();
+            throw new UserNoLongerExistsException("El usuario " + adversario + " ya no existe. Borrando partida"); 
+        }
+    }
+    
     private void cambiarNumPartida(int numP, String filename){
         try{
             File in = new File(filename);

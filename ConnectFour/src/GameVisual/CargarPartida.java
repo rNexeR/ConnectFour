@@ -141,8 +141,6 @@ public class CargarPartida extends javax.swing.JInternalFrame {
             new File(filename).delete();
             throw new UserNoLongerExistsException("El usuario " + adversario + " ya no existe. Borrando partida"); 
         }
-        
-        
     }
     
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
