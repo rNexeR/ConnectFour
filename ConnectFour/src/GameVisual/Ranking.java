@@ -6,21 +6,75 @@
 
 package GameVisual;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import Librerias.Usuarios;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author KELVIN
+ * @author Raim
  */
 public class Ranking extends javax.swing.JInternalFrame {
-
+    private RandomAccessFile rUsuarios;
+    private ArrayList<Usuarios> listUsuarios;
+    
     /**
      * Creates new form Ranking
      */
     public Ranking() {
         initComponents();
-        loadUsers();
+        try{
+            rUsuarios = new RandomAccessFile("GameFiles" + File.separator 
+                    + "usuarios.cfo", "r");
+            listUsuarios = new ArrayList<>();  
+            //Agregar usuarios a la lista y luego ordenarlos
+            addUsersToList();
+            sortListUsuarios();
+        }catch(IOException io){
+            System.out.println(io.getMessage());
+        }
+    }
+    
+    private void addUsersToList() throws IOException{
+        listUsuarios.clear();
+        rUsuarios.seek(0);
+        while(rUsuarios.getFilePointer() < rUsuarios.length()){
+            String username = rUsuarios.readUTF();
+            rUsuarios.readUTF();
+            String nombre = rUsuarios.readUTF();
+            rUsuarios.readLong();
+            rUsuarios.skipBytes(8);
+            int puntos = rUsuarios.readInt();
+            //Agregar solo los datos necesarios para el ranking
+            listUsuarios.add(new Usuarios(0, 0, puntos, nombre, username, "", 0));            
+        }    
+               
+    }
+    
+    private void sortListUsuarios(){
+        ArrayList<Usuarios> tmpUsers = new ArrayList<>();
+        Usuarios userPlaceholder;
+        if (listUsuarios.isEmpty())
+            return;
+        
+        int row = 0;
+        while (listUsuarios.size() > 0){                 
+            userPlaceholder = listUsuarios.get(0);
+            for (int i = listUsuarios.size() - 1; i > 0; i--){      
+                Usuarios comparisonUser = listUsuarios.get(i);
+                userPlaceholder = userPlaceholder.getPuntos() > comparisonUser.getPuntos() ?
+                        userPlaceholder : comparisonUser;
+            }
+            Object[] insertado = {row + 1, userPlaceholder.getNombre(), 
+                userPlaceholder.getUsername(), userPlaceholder.getPuntos()};
+            //( (DefaultTableModel) table.getModel() ).insertRow(dest+1, getValuesForNewRow());
+            ( (DefaultTableModel) jTRanks.getModel() ).insertRow(row++, insertado);
+            
+            listUsuarios.remove(userPlaceholder);
+        }
     }
 
     /**
@@ -33,10 +87,10 @@ public class Ranking extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbUsers = new javax.swing.JTable();
+        jTRanks = new javax.swing.JTable();
         btnCerrar = new javax.swing.JButton();
 
-        tbUsers.setModel(new javax.swing.table.DefaultTableModel(
+        jTRanks.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -59,9 +113,14 @@ public class Ranking extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tbUsers);
+        jScrollPane1.setViewportView(jTRanks);
 
         btnCerrar.setText("Cerrar");
+        btnCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -89,19 +148,15 @@ public class Ranking extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void loadUsers(){
-        DefaultTableModel modelo = (DefaultTableModel)tbUsers.getModel();
-        int c = 1;
-        for(Usuarios u : GameUsuarios.users){
-            System.out.println(u.getNombre());
-            modelo.addRow(new Object[]{c, u.getNombre(), u.getUsername(), u.getPuntos()});
-            c++;
-        }
-    }
+    private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnCerrarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tbUsers;
+    private javax.swing.JTable jTRanks;
     // End of variables declaration//GEN-END:variables
 }
