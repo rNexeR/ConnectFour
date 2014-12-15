@@ -25,6 +25,7 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
     private String dir;
     /**
      * Creates new form TransferirPartida
+     * @param usuario
      */
     public TransferirPartida(Usuarios usuario) {
         initComponents();
@@ -100,15 +101,6 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-//    private void loadUsuarios(Usuarios currentUser){
-//        GameUsuarios.loadUsers(); 
-//        loggedUser = currentUser;
-//        for(Usuarios u : GameUsuarios.users){
-//            System.out.println(u.getNombre());
-//            if(u != currentUser)
-//                JCUsuarios.addItem(u.getUsername());
-//        }
-//    }
     
     private String getAdversario(char partida){
         String adversario = null;
@@ -117,23 +109,31 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
         String files[] = fi.list();
         for (String s : files){
             if (s.startsWith("partida")){
-                 fi = new File(dir + File.separator + s);
-                try {
-                    RandomAccessFile rPartida = new RandomAccessFile(fi, "r");
-                    //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
-                    int numPartida = rPartida.readInt();
-                    String userActual = rPartida.readUTF();
-                    adversario = rPartida.readUTF();
-                    Date fecha = new Date(rPartida.readLong());                    
-                    char estado = rPartida.readChar();
-                    rPartida.skipBytes(4);
-                    int turno = rPartida.readInt();
-                    
-                    rPartida.close();
-                    Formatter formato = new Formatter();
-                    formato.format("%d - %s VS %s - Iniciado en: %tc - Turno %d", numPartida, userActual, adversario 
-                            , fecha, turno);
-                    if (numPartida == partida)
+                fi = new File(dir + File.separator + s);
+                try {    
+                    int numPartida;
+                     //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
+                     try (RandomAccessFile rPartida = new RandomAccessFile(fi, "rw")) {
+                         //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
+                         numPartida = rPartida.readInt();
+                         String userActual = rPartida.readUTF();
+                         adversario = rPartida.readUTF();
+                         Date fecha = new Date(rPartida.readLong());
+                         char estado = rPartida.readChar();
+                         char resultado = rPartida.readChar();
+                         char tipoResultado = rPartida.readChar();
+                         int turno = rPartida.readInt();
+                         //Reescribir el archivo para invertir roles de adversario y user
+                         rPartida.seek(4);
+                         rPartida.writeUTF(adversario);
+                         rPartida.writeUTF(userActual);
+                         rPartida.writeLong(fecha.getTime());
+                         rPartida.writeChar(estado);                         
+                         rPartida.writeChar(resultado);                         
+                         rPartida.writeChar(tipoResultado);
+                         rPartida.writeInt(turno);
+                     }
+                    if (numPartida == (int)partida)
                         return adversario;                   
                 } catch (IOException ex) {
                     System.out.println("Error generando Partidas Pendientes");
@@ -147,16 +147,23 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         if (JCPartidas.getItemCount()>0){
             char partida = JCPartidas.getSelectedItem().toString().charAt(0);
-            String user = getAdversario(partida);
-            if (JOptionPane .showConfirmDialog(this, "¿Desea realmente transferir la partida a "+ user +"?", "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+            if (JOptionPane .showConfirmDialog(this, "¿Desea realmente transferir la partida a su adversario?",
+                    "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+                
                 File par = new File(dir + File.separator + "partida#" + partida + ".par");
                 File ser = new File(dir + File.separator + "tableros" + File.separator + partida + ".ser");
+                String user = getAdversario(partida);
                 int numP = GameNumeraciones.getNextNumPartida(GameUsuarios.searchUser(user));
-                int numS = GameNumeraciones.getNextNumTablero(GameUsuarios.searchUser(user));
-                String dirPartida = "GameFiles" + File.separator + "usuarios" + File.separator + user + File.separator + "partida#"+numP + ".par";
+                //int numS = GameNumeraciones.getNextNumTablero(GameUsuarios.searchUser(user));
+                
+                String dirPartida = "GameFiles" + File.separator + "usuarios" + File.separator
+                        + user + File.separator + "partida#"+numP + ".par";
+                
                 par.renameTo(new File(dirPartida));
-                ser.renameTo(new File("GameFiles" + File.separator + "usuarios" + File.separator + user + File.separator + "tableros" + File.separator + numP + ".ser"));
+                ser.renameTo(new File("GameFiles" + File.separator + "usuarios"
+                        + File.separator + user + File.separator + "tableros" + File.separator + numP + ".ser"));
                 cambiarNumPartida(numP, dirPartida);
+                
                 JOptionPane.showMessageDialog(this, "Partida Transferida", "ConnectFour", 
                     JOptionPane.INFORMATION_MESSAGE);
                 dispose();
