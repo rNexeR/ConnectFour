@@ -67,6 +67,9 @@ public class Ranking extends javax.swing.JInternalFrame {
                 Usuarios comparisonUser = listUsuarios.get(i);
                 userPlaceholder = userPlaceholder.getPuntos() > comparisonUser.getPuntos() ?
                         userPlaceholder : comparisonUser;
+                
+                System.out.printf("P1: %d - P2: %d %n", userPlaceholder.getPuntos(), 
+                        comparisonUser.getPuntos());
             }
             Object[] insertado = {row + 1, userPlaceholder.getNombre(), 
                 userPlaceholder.getUsername(), userPlaceholder.getPuntos()};
