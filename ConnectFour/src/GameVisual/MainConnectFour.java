@@ -159,7 +159,7 @@ public class MainConnectFour extends javax.swing.JFrame {
                 long fec = getTime(txtfecha.getText());
                 GameUsuarios.users.add(new Usuarios(name, usern, password, fec));
                 System.out.println("Usuario Creado");
-                GameUsuarios.saveUsers();
+                GameUsuarios.saveUsers();                
                     
                 File userFile = new File("GameFiles" + File.separator
                         + "usuarios" + File.separator + usern + File.separator + "tableros");
@@ -195,15 +195,17 @@ public class MainConnectFour extends javax.swing.JFrame {
                     + File.separator + name;
             File user = new File(dirUsers + File.separator + "tableros");
             user.mkdirs();
+            RandomAccessFile numSing;   
             //Archivo numeración en la carpeta de tableros
-            RandomAccessFile u = new RandomAccessFile(dirUsers + File.separator + "tableros" 
-                    + File.separator + "numeracion.num", "rw");              
-            u.writeInt(1);           
-            
-            //Archivo numeración en la carpeta del usuario
-            user = new File(dirUsers + File.separator + "numeracion.num");                          
-            RandomAccessFile numSing = new RandomAccessFile(user, "rw");              
-            numSing.writeInt(1);            
+            try ( RandomAccessFile u = new RandomAccessFile(dirUsers + File.separator + "tableros"
+                            + File.separator + "numeracion.num", "rw")) {
+                u.writeInt(1);
+                //Archivo numeración en la carpeta del usuario
+                user = new File(dirUsers + File.separator + "numeracion.num");
+                numSing = new RandomAccessFile(user, "rw");
+                numSing.writeInt(1);
+            }
+            numSing.close();
         } catch (IOException ex) {
             System.out.println("Error al crear directorios de Usuario");
         }
