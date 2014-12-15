@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import Librerias.Usuarios;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -56,11 +57,23 @@ public class Ranking extends javax.swing.JInternalFrame {
     private void sortListUsuarios(){
         ArrayList<Usuarios> tmpUsers = new ArrayList<>();
         Usuarios userPlaceholder;
-        while (listUsuarios.size() > 0){
-            for (int i = 0; i < listUsuarios.size() - 1; i++){
-                userPlaceholder = listUsuarios.get(0);
-                //userPlaceholder = Math.max(userPlaceholder.getPuntos(), list)
+        if (listUsuarios.isEmpty())
+            return;
+        
+        int row = 0;
+        while (listUsuarios.size() > 0){                 
+            userPlaceholder = listUsuarios.get(0);
+            for (int i = listUsuarios.size() - 1; i > 0; i--){      
+                Usuarios comparisonUser = listUsuarios.get(i);
+                userPlaceholder = userPlaceholder.getPuntos() > comparisonUser.getPuntos() ?
+                        userPlaceholder : comparisonUser;
             }
+            Object[] insertado = {row + 1, userPlaceholder.getNombre(), 
+                userPlaceholder.getUsername(), userPlaceholder.getPuntos()};
+            //( (DefaultTableModel) table.getModel() ).insertRow(dest+1, getValuesForNewRow());
+            ( (DefaultTableModel) jTRanks.getModel() ).insertRow(row++, insertado);
+            
+            listUsuarios.remove(userPlaceholder);
         }
     }
 
@@ -74,10 +87,10 @@ public class Ranking extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTRanks = new javax.swing.JTable();
         btnCerrar = new javax.swing.JButton();
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTRanks.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -100,9 +113,14 @@ public class Ranking extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jTRanks);
 
         btnCerrar.setText("Cerrar");
+        btnCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -130,10 +148,15 @@ public class Ranking extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnCerrarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTRanks;
     // End of variables declaration//GEN-END:variables
 }
