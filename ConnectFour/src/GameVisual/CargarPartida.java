@@ -6,6 +6,7 @@
 
 package GameVisual;
 
+import Librerias.GamesPendientes;
 import Librerias.Usuarios;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.logging.Level;
@@ -35,40 +37,14 @@ public class CargarPartida extends javax.swing.JInternalFrame {
         initComponents();        
         loggedUser = usuario;        
         dir = "GameFiles" + File.separator + "usuarios" + File.separator + loggedUser.getUsername();
-        loadPartidasPendientes();        
+        loadPartidasPendientes(loggedUser);        
     }
     
-    private void loadPartidasPendientes(){
-        File fi = new File(dir);                     
-                       
-        String [] files = fi.list();        
-        for (String s : files){
-            if (s.startsWith("partida")){                
-                fi = new File(dir + File.separator + s);
-                try {
-                    RandomAccessFile rPartida = new RandomAccessFile(fi, "r");
-                    //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
-                    int numPartida = rPartida.readInt();
-                    String userActual = rPartida.readUTF();
-                    String adversario = rPartida.readUTF();
-                    Date fecha = new Date(rPartida.readLong());                    
-                    char estado = rPartida.readChar();
-                    rPartida.skipBytes(4);
-                    int turno = rPartida.readInt();
-                    
-                    rPartida.close();
-                    Formatter formato = new Formatter();
-                    formato.format("%d - %s VS %s - Iniciado en: %tc - Turno %d", numPartida, userActual, adversario 
-                            , fecha, turno);
-                    if (estado == 'P')
-                        JCPartidas.addItem(formato.toString());                    
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(rootPane, "Error",
-                            "Error con los archivos", JOptionPane.ERROR_MESSAGE);
-                }
-                
-            }
-        }        
+    private void loadPartidasPendientes(Usuarios logged){
+        ArrayList<String> partidas = GamesPendientes.getPartidasPendientes(logged);
+        for (String s : partidas){
+            JCPartidas.addItem(s);
+        }
     }
 
     /**
@@ -148,9 +124,9 @@ public class CargarPartida extends javax.swing.JInternalFrame {
             new GameCFour(loggedUser, filenamePartida, filenameCirculos /*anterior, partida; aqui, filename circulos */).setVisible(true);
             dispose();
         }catch (Exception ex){                           
-            JOptionPane.showMessageDialog(this, "Error", "Error buscando archivos", 
-                    JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error buscando archivos - Cerciorese que hayan partidas que cargar",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            //ex.printStackTrace();
 
         }
         
