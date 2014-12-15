@@ -6,10 +6,12 @@
 
 package GameVisual;
 
+import Librerias.GamesPendientes;
 import Librerias.Usuarios;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Formatter;
 import javax.swing.JOptionPane;
@@ -28,7 +30,7 @@ public class EliminarPartida extends javax.swing.JInternalFrame {
         this.currentUser = currentUser;
         dir = "GameFiles" + File.separator + "usuarios" + File.separator + currentUser.getUsername();
         initComponents();
-        loadPartidas();
+        loadPartidas(currentUser);
     }
 
     /**
@@ -96,33 +98,11 @@ public class EliminarPartida extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private void loadPartidas(){
-        File fi = new File(dir);                     
-                       
-        String [] files = fi.list();        
-        for (String s : files){
-            if (s.startsWith("partida")){                
-                fi = new File(dir + File.separator + s);
-                try {
-                    RandomAccessFile rPartida = new RandomAccessFile(fi, "r");
-                    //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
-                    int numPartida = rPartida.readInt();
-                    String userActual = rPartida.readUTF();
-                    String adversario = rPartida.readUTF();
-                    Date fecha = new Date(rPartida.readLong());
-                    
-                    rPartida.close();
-                    Formatter formato = new Formatter();
-                    formato.format("%d - %s VS %s - Iniciado en: %tc", numPartida, userActual, adversario 
-                            , fecha);
-                    JCPartidas.addItem(formato.toString());                    
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(rootPane, "Error",
-                            "Error con los archivos", JOptionPane.ERROR_MESSAGE);
-                }
-                
-            }
-        }        
+    private void loadPartidas(Usuarios logged){
+        ArrayList<String> partidas = GamesPendientes.getPartidasPendientes(logged);
+        for (String s : partidas){
+            JCPartidas.addItem(s);
+        }
     }
     
     private void btnaceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarActionPerformed
@@ -133,7 +113,7 @@ public class EliminarPartida extends javax.swing.JInternalFrame {
                 char archivo = JCPartidas.getSelectedItem().toString().charAt(0);
                     File partida = new File("GameFiles/usuarios/"+currentUser.getUsername()+"/"+"partida#"+archivo+".par");
                     partida.delete();
-                    loadPartidas();
+                    loadPartidas(currentUser);
                     JOptionPane.showMessageDialog(this, "Partida Eliminada", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
             }

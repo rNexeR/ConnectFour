@@ -6,10 +6,12 @@
 
 package GameVisual;
 
+import Librerias.GamesPendientes;
 import Librerias.Usuarios;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Formatter;
 import javax.swing.JOptionPane;
@@ -29,7 +31,7 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
         initComponents();        
         loggedUser = usuario;        
         dir = "GameFiles" + File.separator + "usuarios" + File.separator + loggedUser.getUsername();
-        loadPartidasPendientes(); 
+        loadPartidasPendientes(loggedUser); 
         loadUsuarios(loggedUser);
     }
 
@@ -51,6 +53,8 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Seleccione Partida:");
 
+        JCPartidas.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         btnaceptar.setText("Transferir");
         btnaceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -59,13 +63,10 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
         });
 
         btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("Seleccione Usuario:");
+
+        JCUsuarios.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -88,7 +89,7 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(JCUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 347, Short.MAX_VALUE)))
+                        .addGap(0, 217, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -98,7 +99,7 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(JCPartidas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(JCUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -106,7 +107,7 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnaceptar)
                     .addComponent(btnCancelar))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -161,32 +162,10 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
         dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
     
-    private void loadPartidasPendientes(){
-        File fi = new File(dir);                     
-                       
-        String [] files = fi.list();        
-        for (String s : files){
-            if (s.startsWith("partida")){                
-                fi = new File(dir + File.separator + s);
-                try {
-                    RandomAccessFile rPartida = new RandomAccessFile(fi, "r");
-                    //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
-                    int numPartida = rPartida.readInt();
-                    String userActual = rPartida.readUTF();
-                    String adversario = rPartida.readUTF();
-                    Date fecha = new Date(rPartida.readLong());
-                    
-                    rPartida.close();
-                    Formatter formato = new Formatter();
-                    formato.format("%d - %s VS %s - Iniciado en: %tc", numPartida, userActual, adversario 
-                            , fecha);
-                    JCPartidas.addItem(formato.toString());                    
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(rootPane, "Error",
-                            "Error con los archivos", JOptionPane.ERROR_MESSAGE);
-                }
-                
-            }
+    private void loadPartidasPendientes(Usuarios logged){
+        ArrayList<String> partidas = GamesPendientes.getPartidasPendientes(logged);
+        for (String s : partidas){
+            JCPartidas.addItem(s);
         }
     }
 
