@@ -26,6 +26,9 @@ public class PartidaNueva extends javax.swing.JInternalFrame {
             if(u != currentUser)
                 jCUsuarios.addItem(u.getUsername());
         }
+        
+        if (jCUsuarios.getItemCount() == 0)
+            jBAceptar.setEnabled(false);
     }
 
     /**
