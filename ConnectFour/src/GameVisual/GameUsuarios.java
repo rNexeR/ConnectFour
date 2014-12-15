@@ -77,11 +77,30 @@ public class GameUsuarios {
     }
     
     public static boolean deleteUser(Usuarios user){
-        if (users.remove(user)){
-            saveUsers();
+        File userFile = new File("GameFiles" + File.separator 
+                    + "usuarios" + File.separator + user.getUsername());
+        
+        if (deleteUserDirs(userFile) && users.remove(user)){
+            saveUsers();            
             return true;
         }
         return false;
+    }
+    
+     private static boolean deleteUserDirs(File file) {
+        try{
+            boolean interno = true;
+            
+            if(file.isDirectory()){
+                for(File chi : file.listFiles())
+                    interno = deleteUserDirs(chi);
+            }
+            
+            return file.delete() && interno;            
+        }catch(SecurityException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
     
     public static Usuarios searchUser(String user){
