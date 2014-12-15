@@ -119,17 +119,21 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
             if (s.startsWith("partida")){
                  fi = new File(dir + File.separator + s);
                 try {
-                    RandomAccessFile rPartida = new RandomAccessFile(fi, "r");
-                    //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
-                    int numPartida = rPartida.readInt();
-                    String userActual = rPartida.readUTF();
-                    adversario = rPartida.readUTF();
-                    Date fecha = new Date(rPartida.readLong());                    
-                    char estado = rPartida.readChar();
-                    rPartida.skipBytes(4);
-                    int turno = rPartida.readInt();
-                    
-                    rPartida.close();
+                    int numPartida;
+                    String userActual;
+                    Date fecha;
+                    int turno;                    
+                     //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
+                     try (RandomAccessFile rPartida = new RandomAccessFile(fi, "r")) {
+                         //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
+                         numPartida = rPartida.readInt();
+                         userActual = rPartida.readUTF();
+                         adversario = rPartida.readUTF();
+                         fecha = new Date(rPartida.readLong());
+                         char estado = rPartida.readChar();
+                         rPartida.skipBytes(4);
+                         turno = rPartida.readInt();
+                     }
                     Formatter formato = new Formatter();
                     formato.format("%d - %s VS %s - Iniciado en: %tc - Turno %d", numPartida, userActual, adversario 
                             , fecha, turno);
@@ -167,9 +171,9 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
     private void cambiarNumPartida(int numP, String filename){
         try{
             File in = new File(filename);
-            RandomAccessFile partida = new RandomAccessFile(in, "rw");
-            partida.writeInt(numP);
-            partida.close();
+            try (RandomAccessFile partida = new RandomAccessFile(in, "rw")) {
+                partida.writeInt(numP);
+            }
         }catch(IOException ex){
             JOptionPane.showMessageDialog(this, "Error al Transferir Partida \n" + ex.getMessage(), "Error", 
                     JOptionPane.ERROR_MESSAGE);
