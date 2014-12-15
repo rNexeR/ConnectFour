@@ -124,12 +124,45 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
         }
     }
     
+    private String getAdversario(char partida){
+        String adversario = null;
+        dir = "GameFiles" + File.separator + "usuarios" + File.separator + loggedUser.getUsername() + File.separator;
+        File fi = new File(dir);
+        String files[] = fi.list();
+        for (String s : files){
+            if (s.startsWith("partida")){
+                 fi = new File(dir + File.separator + s);
+                try {
+                    RandomAccessFile rPartida = new RandomAccessFile(fi, "r");
+                    //Correlativo del juego – Juego vs JUGADOR CONTRARIO iniciado el FECHA – Turno #
+                    int numPartida = rPartida.readInt();
+                    String userActual = rPartida.readUTF();
+                    adversario = rPartida.readUTF();
+                    Date fecha = new Date(rPartida.readLong());                    
+                    char estado = rPartida.readChar();
+                    rPartida.skipBytes(4);
+                    int turno = rPartida.readInt();
+                    
+                    rPartida.close();
+                    Formatter formato = new Formatter();
+                    formato.format("%d - %s VS %s - Iniciado en: %tc - Turno %d", numPartida, userActual, adversario 
+                            , fecha, turno);
+                    if (numPartida == partida)
+                        return adversario;                   
+                } catch (IOException ex) {
+                    System.out.println("Error generando Partidas Pendientes");
+                }
+            }
+        }
+        return adversario;
+    }
+    
     private void btnaceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarActionPerformed
         // TODO add your handling code here:
         if (JCPartidas.getItemCount()>0 && JCUsuarios.getItemCount()>0){
             char partida = JCPartidas.getSelectedItem().toString().charAt(0);
-            String user = JCUsuarios.getSelectedItem().toString();
-            if (JOptionPane .showConfirmDialog(this, "¿Desea realmente transferir la partida?", "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
+            String user = getAdversario(partida);
+            if (JOptionPane .showConfirmDialog(this, "¿Desea realmente transferir la partida a "+ user +"?", "Confirmacion", JOptionPane .YES_NO_OPTION) == JOptionPane .YES_OPTION){
                 File par = new File(dir + File.separator + "partida#" + partida + ".par");
                 File ser = new File(dir + File.separator + "tableros" + File.separator + partida + ".ser");
                 int numP = GameNumeraciones.getNextNumPartida(GameUsuarios.searchUser(user));
