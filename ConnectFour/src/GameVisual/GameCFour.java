@@ -77,6 +77,7 @@ public class GameCFour extends JFrame {
         usuarioActual = user1;
         turno = 1;
         fecha = Calendar.getInstance().getTimeInMillis();
+        numPartida = GameNumeraciones.getNextNumPartida(loggedIn);
     }
     
     public GameCFour(Usuarios loggedIn, String filenamePartida, String filenameCirculos){
@@ -263,6 +264,16 @@ public class GameCFour extends JFrame {
         return false;
     }
     
+    public boolean validarColumnaLlena(int col){
+        for (int i = CANT_ROW-1; i >= 0; i--) {
+            CircleLabels este = (CircleLabels)square[i][col].getComponent(0);
+            if (este.descripcion.equalsIgnoreCase("Ficha Blank")){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     private void validarGameOver(int col){
         if (downCircle(col)){
             desactivarConectores();
@@ -270,9 +281,13 @@ public class GameCFour extends JFrame {
             JOptionPane.showMessageDialog(this, "Ha ganado el jugador " + nombre, "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
             if (colorActual == 'R'){
                 user1.addWinPoints();
+                writeLog(user1, numPartida, 'T', 'G', 'C');
+                writeLog(user2, numPartida, 'T', 'P', 'C');
                 terminarPartida('T', 'G', 'C');
             }else{
                 user2.addWinPoints();
+                writeLog(user2, numPartida, 'T', 'G', 'C');
+                writeLog(user1, numPartida, 'T', 'P', 'C');
                 terminarPartida('T', 'P', 'C');
             }
         }else if (empate()){
@@ -280,6 +295,8 @@ public class GameCFour extends JFrame {
             JOptionPane.showMessageDialog(this, "Empate Declarado, han ganado 1 pt cada uno", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
             user1.addEmpatePoints();
             user2.addEmpatePoints();
+            writeLog(user1, numPartida, 'T', 'E', 'C');
+            writeLog(user2, numPartida, 'T', 'E', 'C');
             terminarPartida('T', 'E', 'C');
         }else{
             turno++;
@@ -304,42 +321,49 @@ public class GameCFour extends JFrame {
         //Aqui el codigo
         int col = 0;
         validarGameOver(col);
+        col1.setEnabled(validarColumnaLlena(col));
     }
     
     private void col2ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 1;
         validarGameOver(col);
+        col2.setEnabled(validarColumnaLlena(col));
     }
     
     private void col3ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 2;
         validarGameOver(col);
+        col3.setEnabled(validarColumnaLlena(col));
     }
     
     private void col4ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 3;
         validarGameOver(col);
+        col4.setEnabled(validarColumnaLlena(col));
     }
     
     private void col5ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 4;
         validarGameOver(col);
+        col5.setEnabled(validarColumnaLlena(col));
     }
     
     private void col6ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 5;
         validarGameOver(col);
+        col6.setEnabled(validarColumnaLlena(col));
     }
     
     private void col7ActionPerformed(ActionEvent evt) {
         //Aqui el codigo
         int col = 6;
         validarGameOver(col);
+        col7.setEnabled(validarColumnaLlena(col));
     }
     
     private void pausaActionPerformed(ActionEvent evt) {
@@ -358,17 +382,29 @@ public class GameCFour extends JFrame {
                 if (user1 == loggedIn){
                     JOptionPane.showMessageDialog(this, "Jugador "+user1.getNombre()+" se retira, " + user2.getNombre()+" ha ganado", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
                     user2.addWinPoints();
+                    writeLog(user2, numPartida, 'T', 'G', 'R');
+                    writeLog(user1, numPartida, 'T', 'P', 'R');
+                    terminarPartida('T', 'P', 'R');
                 }else{
                     JOptionPane.showMessageDialog(this, "Jugador "+user2.getNombre()+" se retira, " + user1.getNombre()+" ha ganado", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
                     user1.addWinPoints();
+                    writeLog(user1, numPartida, 'T', 'G', 'R');
+                    writeLog(user2, numPartida, 'T', 'P', 'R');
+                    terminarPartida('T', 'G', 'R');
                 }
             }else{
-                if (user1 != loggedIn){
+                if (user1 != usuarioActual){
                     JOptionPane.showMessageDialog(this, "Jugador "+user1.getNombre()+" se retira, " + user2.getNombre()+" ha ganado", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
                     user2.addWinPoints();
+                    writeLog(user2, numPartida, 'T', 'G', 'R');
+                    writeLog(user1, numPartida, 'T', 'P', 'R');
+                    terminarPartida('T', 'G', 'R');
                 }else{
                     JOptionPane.showMessageDialog(this, "Jugador "+user2.getNombre()+" se retira, " + user1.getNombre()+" ha ganado", "ConnectFour", JOptionPane.INFORMATION_MESSAGE);
                     user1.addWinPoints();
+                    writeLog(user1, numPartida, 'T', 'G', 'R');
+                    writeLog(user2, numPartida, 'T', 'P', 'R');
+                    terminarPartida('T', 'P', 'R');
                 }
             }
             dispose();
@@ -387,15 +423,23 @@ public class GameCFour extends JFrame {
             if (resultado == 'E'){
                 System.out.println("Guardando nueva partida, estado: " + estado + " resultado: Empate");
                 terminarPartidaCargada(estado, 'E', tipoResultado);
-            }else if (resultado != 'P'){
-                if (usuarioActual == loggedIn){
+            }else if (resultado == 'G'){
+                if (usuarioActual.getUsername().equals(loggedIn)){
                     System.out.println("Guardando nueva partida, estado: " + estado + " resultado: Ganada");
-                    terminarPartidaCargada(estado, 'G', tipoResultado);
+                    terminarPartidaCargada(estado, 'P', tipoResultado);
                 }else{
                     System.out.println("Guardando nueva partida, estado: " + estado + " resultado: Perdida");
+                    terminarPartidaCargada(estado, 'G', tipoResultado);
+                }
+            }else if (resultado == 'P'){
+                if (usuarioActual.getUsername().equals(loggedIn)){
+                    System.out.println("Guardando nueva partida, estado: " + estado + " resultado: Perdida");
+                    terminarPartidaCargada(estado, 'G', tipoResultado);
+                }else{
+                    System.out.println("Guardando nueva partida, estado: " + estado + " resultado: Ganada");
                     terminarPartidaCargada(estado, 'P', tipoResultado);
                 }
-            }else{
+            }else if (resultado == 'V'){
                 System.out.println("Guardando nueva partida, estado: " + estado + " resultado: Pendiente");
                 terminarPartidaCargada(estado, resultado, tipoResultado);
             }
@@ -420,7 +464,7 @@ public class GameCFour extends JFrame {
         return -1;
     }
     
-    private void writeLog(int numP, char estado, char resultado, char tipoResultado){
+    private void writeLog(Usuarios loggedIn, int numP, char estado, char resultado, char tipoResultado){
         try{
             File in = new File("GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername()+ File.separator + "juegos.cfl");
             RandomAccessFile juegos = new RandomAccessFile(in, "rw");
@@ -439,29 +483,29 @@ public class GameCFour extends JFrame {
         }
     }
     
-    private void editLog(int numP, char estado, char resultado, char tipoResultado){
-        try{
-            File in = new File("GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername()+ File.separator + "juegos.cfl");
-            RandomAccessFile juegos = new RandomAccessFile(in, "rw");
-            long x = searchLog(numP);
-            if (x >= 0){
-                juegos.seek(x);
-                juegos.writeInt(numP);
-                juegos.readUTF();
-                juegos.readUTF();
-                juegos.readLong();
-                juegos.writeChar(estado);
-                juegos.writeChar(resultado);
-                juegos.writeChar(tipoResultado);
-                juegos.writeInt(turno);
-            }
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
+//    private void editLog(Usuarios loggedIn, int numP, char estado, char resultado, char tipoResultado){
+//        try{
+//            File in = new File("GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername()+ File.separator + "juegos.cfl");
+//            RandomAccessFile juegos = new RandomAccessFile(in, "rw");
+//            long x = searchLog(numP);
+//            if (x >= 0){
+//                juegos.seek(x);
+//                juegos.writeInt(numP);
+//                juegos.readUTF();
+//                juegos.readUTF();
+//                juegos.readLong();
+//                juegos.writeChar(estado);
+//                juegos.writeChar(resultado);
+//                juegos.writeChar(tipoResultado);
+//                juegos.writeInt(turno);
+//            }
+//        } catch (IOException ex) {
+//            System.out.println(ex.getMessage());
+//        }
+//    }
     
     private void terminarPartidaNueva(char estado, char resultado, char tipoResultado){
-        int numP = GameNumeraciones.getNextNumPartida(loggedIn);
+        int numP = numPartida;
         int numT = GameNumeraciones.getNextNumTablero(loggedIn);
         //actual = new Partidas(numP, user1.getUsername(), user2.getUsername(), fecha, 'T', resultado, tipoResultado, turno);
         
@@ -477,8 +521,12 @@ public class GameCFour extends JFrame {
             m.writeChar(tipoResultado);
             m.writeInt(turno);
             m.close();
-            
-            writeLog(numP, estado, resultado, tipoResultado);
+//            if (estado!='P'){
+//                writeLog(usuarioActual, numP, estado, resultado, tipoResultado);
+//                Usuarios usu2 = usuarioActual==user1?user2:user1;
+//                resultado = resultado=='G'?'P':'G';
+//                writeLog(usu2, numP, estado, resultado, tipoResultado);
+//            }
             
             String dir = "GameFiles" + File.separator + "usuarios" + File.separator + loggedIn.getUsername() + File.separator + "tableros" + File.separator + numT +".ser";
             FileOutputStream fileOut = new FileOutputStream(dir);
@@ -533,7 +581,12 @@ public class GameCFour extends JFrame {
             m.writeChar(tipoResultado);
             m.writeInt(turno);
             
-            editLog(num, estado, resultado, tipoResultado);
+//            if (estado!='P'){
+//                writeLog(usuarioActual, num, estado, resultado, tipoResultado);
+//                Usuarios usu2 = usuarioActual==user1?user2:user1;
+//                resultado = resultado=='G'?'P':'G';
+//                writeLog(usu2, num, estado, resultado, tipoResultado);
+//            }
             
             FileOutputStream fileOut = new FileOutputStream(tableroCargado);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -593,11 +646,9 @@ public class GameCFour extends JFrame {
     private boolean connectedLineDD(int row, int col, char color){
         System.out.println(color);
         while(col>0 && row>0){
-            System.out.println("Entro al while");
             col--;
             row--;
         }
-        System.out.println("Inicio: " + row + " - " + col);
         int contador = 0;
         CircleLabels h;
         
@@ -618,7 +669,6 @@ public class GameCFour extends JFrame {
                 contador = 0;
             col++; 
             row++;
-            System.out.println(contador);
         }
         if (contador>=4)
             return true;

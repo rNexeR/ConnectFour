@@ -6,6 +6,9 @@
 
 package GameVisual;
 
+import Librerias.Usuarios;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author KELVIN
@@ -17,6 +20,7 @@ public class Ranking extends javax.swing.JInternalFrame {
      */
     public Ranking() {
         initComponents();
+        loadUsers();
     }
 
     /**
@@ -29,10 +33,10 @@ public class Ranking extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbUsers = new javax.swing.JTable();
         btnCerrar = new javax.swing.JButton();
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbUsers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -55,7 +59,7 @@ public class Ranking extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tbUsers);
 
         btnCerrar.setText("Cerrar");
 
@@ -85,10 +89,19 @@ public class Ranking extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void loadUsers(){
+        DefaultTableModel modelo = (DefaultTableModel)tbUsers.getModel();
+        int c = 1;
+        for(Usuarios u : GameUsuarios.users){
+            System.out.println(u.getNombre());
+            modelo.addRow(new Object[]{c, u.getNombre(), u.getUsername(), u.getPuntos()});
+            c++;
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tbUsers;
     // End of variables declaration//GEN-END:variables
 }

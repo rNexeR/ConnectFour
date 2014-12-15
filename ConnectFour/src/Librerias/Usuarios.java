@@ -5,6 +5,8 @@
  */
 package Librerias;
 
+import GameVisual.GameUsuarios;
+
 
 /**
  *
@@ -108,9 +110,11 @@ public class Usuarios {
     
     public void addWinPoints(){
         puntos+=3;
+        GameUsuarios.saveUsers();
     }
     
     public void addEmpatePoints(){
         puntos++;
+        GameUsuarios.saveUsers();
     }
 }
