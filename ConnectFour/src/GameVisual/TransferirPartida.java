@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Formatter;
 import javax.swing.JOptionPane;
 
 /**
@@ -105,7 +104,8 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
     
     private String getAdversario(char partida) throws UserNoLongerExistsException{
         String adversario = null;
-        dir = "GameFiles" + File.separator + "usuarios" + File.separator + loggedUser.getUsername() + File.separator;
+        dir = "GameFiles" + File.separator + "usuarios" 
+                + File.separator + loggedUser.getUsername() + File.separator;
         File fi = new File(dir);
         String files[] = fi.list();
         for (String s : files){
@@ -141,7 +141,7 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
                          rPartida.writeChar(resultado);                         
                          rPartida.writeChar(tipoResultado);
                          rPartida.writeInt(turno);
-                     }
+                    }
                     if (numPartida == (int)partida)
                         return adversario;                   
                 } catch (IOException ex) {
@@ -167,11 +167,12 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
                     //int numS = GameNumeraciones.getNextNumTablero(GameUsuarios.searchUser(user));
 
                     String dirPartida = "GameFiles" + File.separator + "usuarios" + File.separator
-                            + user + File.separator + "partida#"+numP + ".par";
+                            + user + File.separator + "partida#" + numP + ".par";
 
                     par.renameTo(new File(dirPartida));
                     ser.renameTo(new File("GameFiles" + File.separator + "usuarios"
-                            + File.separator + user + File.separator + "tableros" + File.separator + numP + ".ser"));
+                            + File.separator + user + File.separator 
+                            + "tableros" + File.separator + numP + ".ser"));
                     cambiarNumPartida(numP, dirPartida);
 
                     JOptionPane.showMessageDialog(this, "Partida Transferida", "ConnectFour", 
@@ -186,25 +187,13 @@ public class TransferirPartida extends javax.swing.JInternalFrame {
         }
         
     }//GEN-LAST:event_btnaceptarActionPerformed
-
-    private void checkForAdversary(String filename) throws UserNoLongerExistsException, IOException{
-        RandomAccessFile rPartida = new RandomAccessFile(filename, "r");
-        rPartida.readInt();
-        rPartida.readUTF();
-        String adversario = rPartida.readUTF();
-        if(GameUsuarios.searchUser(adversario) == null){
-            rPartida.close();
-            new File(filename).delete();
-            throw new UserNoLongerExistsException("El usuario " + adversario + " ya no existe. Borrando partida"); 
-        }
-    }
     
     private void cambiarNumPartida(int numP, String filename){
         try{
             File in = new File(filename);
-            RandomAccessFile partida = new RandomAccessFile(in, "rw");
-            partida.writeInt(numP);
-            partida.close();
+            try (RandomAccessFile partida = new RandomAccessFile(in, "rw")) {
+                partida.writeInt(numP);
+            }
         }catch(IOException ex){
             JOptionPane.showMessageDialog(this, "Error al Transferir Partida \n" + ex.getMessage(), "Error", 
                     JOptionPane.ERROR_MESSAGE);
